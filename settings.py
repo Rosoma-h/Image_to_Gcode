@@ -9,6 +9,7 @@ class Settings():
         self.max_Z = 5
         self.z_safe = 0.5
         self.feed_z = 1000
+
         # В програму вносяться координати величина яких >= filtr_z
         self.filtr_z = 0.5
 

@@ -8,7 +8,7 @@ s = Settings()
 
 def zagr_img():
     name_file = "acvalang.jpg"
-    image = Image.open(r"Imgage\\"[:-1] + name_file)  # Откриваем изображение.
+    image = Image.open(r"Image\\"[:-1] + name_file)  # Откриваем изображение.
     draw = ImageDraw.Draw(image)  # Создаем инструмент для рисования.
     width = image.size[0]  # Определяем ширину.
     height = image.size[1]  # Определяем висоту.

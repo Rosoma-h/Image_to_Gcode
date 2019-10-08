@@ -33,7 +33,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(
-        self.centralwidget.sizePolicy().hasHeightForWidth())
+            self.centralwidget.sizePolicy().hasHeightForWidth())
         self.centralwidget.setSizePolicy(sizePolicy)
         self.centralwidget.setObjectName("centralwidget")
         self.zagruzka = QtWidgets.QPushButton(self.centralwidget)
