@@ -11,7 +11,7 @@ class ZagrImg():
 
     def __init__(self, name_file):
         """Ініціалізація зображення."""
-        self.name_file = "acvalang.jpg"
+        self.name_file = name_file
         self.image = Image.open(r"Image\\"[:-1] + self.name_file)
         self.draw = ImageDraw.Draw(self.image)  # Создаем инстр для рисования.
         self.width = self.image.size[0]  # Определяем ширину.

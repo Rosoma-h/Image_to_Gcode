@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets
 import sys
 from interface import Ui_MainWindow
-from ImageToGcode import zagr_img
+from ImageToGcode import ZagrImg
 # Create aplication
 
 app = QtWidgets.QApplication(sys.argv)
@@ -26,11 +26,15 @@ def perenos_texta():
         chislo = int(text) / 3
         ui.lineEdit_2.setText(str(chislo))
         shablon = "Розмір зображення: "
-        width = zagr_img()[2]
-        height = zagr_img()[3]
+
+        Kartinka = ZagrImg("acvalang.jpg")
+        width = Kartinka.width()
+        # height = Kartinka.height()
+
         ui.label.setText(shablon + str(width) +
                          " на " + str(height) + " пікс.")
-
+    else:
+        ui.lineEdit_1.setText('1')
 
 ui.zagruzka.clicked.connect(perenos_texta)
 # Run main loop
