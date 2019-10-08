@@ -43,8 +43,8 @@ class Ui_MainWindow(object):
 
         font_button = QtGui.QFont()
         font_button.setFamily("Consolas")
-        font_button.setPointSize(16)
-        font_button.setBold(False)
+        font_button.setPointSize(22)
+        font_button.setBold(True)
         font_button.setItalic(True)
         font_button.setWeight(50)
         font_button.setStrikeOut(False)
@@ -87,14 +87,16 @@ class Ui_MainWindow(object):
 
         # Інформація про розмір зображення
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(20, 12, 330, 30))
+        self.label.setGeometry(QtCore.QRect(20, 12, 900, 30))
         font_l = QtGui.QFont()
         font_l.setFamily("NewsGoth BT")
-        font_l.setPointSize(14)
+        font_l.setPointSize(20)
         self.label.setFont(font_l)
+
         self.label.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.label.setFrameShadow(QtWidgets.QFrame.Plain)
         self.label.setObjectName("label")
+        self.label.setScaledContents(True)  # Подгонка под размер содержимого
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)

@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw
+from PIL import ImageDraw
 
 
 def ris_pixel(h_p, w_p, size_pixel, S, image, ris=1):
@@ -11,9 +11,9 @@ def ris_pixel(h_p, w_p, size_pixel, S, image, ris=1):
 
     draw = ImageDraw.Draw(image)
     if ris == 1:
-                for i in range(size_pixel):
-                    for j in range(size_pixel):
-                        draw.point((i + w_p, j + h_p), (S, S, S))
+        for i in range(size_pixel):
+            for j in range(size_pixel):
+                draw.point((i + w_p, j + h_p), (S, S, S))
     # elif ris == 2:
         # if size_pixel % 2 != 0:
             # size_pixel -= 1
@@ -77,14 +77,3 @@ def Gcode_Body(koords, z_safe, feed_z, max_Z, filtr_z):
                           "G0" + "Z" + str(z_safe) + "\n"
                           )
     return GcodeBody
-
-
-
-
-
-
-
-
-
-
-
