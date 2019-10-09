@@ -6,20 +6,16 @@ from settings import Settings
 s = Settings()
 
 
-class ZagrImg():
+def zagr_img(name_file="acvalang.jpg"):
     """Завантажене зображення"""
+    """Ініціалізація зображення."""
+    return Image.open(r"Image\\"[:-1] + name_file)
+    # draw = ImageDraw.Draw(image)  # Создаем инстр для рисования.
+    # pix = image.load()  # Вигружаем значения пикселей.
 
-    def __init__(self, name_file):
-        """Ініціалізація зображення."""
-        self.name_file = name_file
-        self.image = Image.open(r"Image\\"[:-1] + self.name_file)
-        self.draw = ImageDraw.Draw(self.image)  # Создаем инстр для рисования.
-        self.width = self.image.size[0]  # Определяем ширину.
-        self.height = self.image.size[1]  # Определяем висоту.
-        self.pix = self.image.load()  # Вигружаем значения пикселей.
 
-    # return image, draw, width, height, pix, name_file
-
+# Kart = zagr_img("acvalang.jpg")
+# print(Kart)
 
 # image, draw, width, height, pix, name_file = zagr_img()
 # print(zagr_img()[2], zagr_img()[3])
