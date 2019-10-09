@@ -5,7 +5,7 @@ from PyQt5.QtGui import QPixmap
 from PIL import ImageQt
 
 from interface import Ui_MainWindow
-from ImageToGcode import zagr_img
+from ImageToGcode import zagr_img, pixelisation_image
 # Create aplication
 
 app = QtWidgets.QApplication(sys.argv)
@@ -30,9 +30,7 @@ Kartinka = None
 
 def zagruzka_kartinki():
 
-        shablon = "Розмір зображення: "
         global Kartinka
-
         Kartinka = zagr_img("acvalang.jpg")
 
         width = Kartinka.size[0]  # Определяем ширину.
@@ -44,6 +42,7 @@ def zagruzka_kartinki():
 
         ui.origin_image.setPixmap(origin_pixmap)
 
+        shablon = "Розмір зображення: "
         ui.label.setText(shablon + str(width) +
                          " на " + str(height) + " пікселів.")
 
@@ -57,7 +56,17 @@ def prosmotr_kartinki():
 
     if Kartinka:
         print(Kartinka)
-    # ui.showDialog()
+
+        scale = int(float(ui.lineEdit_1.text()))
+        edited_img = pixelisation_image(Kartinka, "acvalang.jpg", scale)[0]
+        print(edited_img)
+        # Тут має бути код, який змінює картинку
+
+        edited_data = ImageQt.ImageQt(Kartinka)
+        edited_pixmap = QPixmap.fromImage(edited_data)
+        edited_pixmap = edited_pixmap.scaled(QtCore.QSize(500, 500), 1, 1)
+
+        ui.edited_image.setPixmap(edited_pixmap)
 
 
 ui.zagruzka.clicked.connect(zagruzka_kartinki)
