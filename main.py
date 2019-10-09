@@ -1,5 +1,9 @@
 import sys
 from PyQt5 import QtWidgets
+from PyQt5 import QtCore
+from PyQt5.QtGui import QPixmap
+from PIL import ImageQt
+
 from interface import Ui_MainWindow
 from ImageToGcode import zagr_img
 # Create aplication
@@ -26,7 +30,7 @@ Kartinka = None
 
 def zagruzka_kartinki():
     text = ui.lineEdit_1.text()
-    if text != "":
+    if text:
         shablon = "Розмір зображення: "
         global Kartinka
 
@@ -34,13 +38,15 @@ def zagruzka_kartinki():
 
         width = Kartinka.size[0]  # Определяем ширину.
         height = Kartinka.size[1]  # Определяем висоту.
-        # width = Kartinka.width()
-        # height = Kartinka.height()
-        # chislo = int(text) / 3
-        # ui.lineEdit_2.setText(str(chislo))
+
+        origin_data = ImageQt.ImageQt(Kartinka)
+        origin_pixmap = QPixmap.fromImage(origin_data)
+        origin_pixmap = origin_pixmap.scaled(QtCore.QSize(500, 500), 1, 1)
+
+        ui.origin_image.setPixmap(origin_pixmap)
 
         ui.label.setText(shablon + str(width) +
-                         " на " + str(height) + " пікс.")
+                         " на " + str(height) + " пікселів.")
     else:
         ui.lineEdit_1.setText('1')
 

@@ -7,11 +7,8 @@ s = Settings()
 
 
 def zagr_img(name_file="acvalang.jpg"):
-    """Завантажене зображення"""
-    """Ініціалізація зображення."""
+    """Завантаження зображення."""
     return Image.open(r"Image\\"[:-1] + name_file)
-    # draw = ImageDraw.Draw(image)  # Создаем инстр для рисования.
-    # pix = image.load()  # Вигружаем значения пикселей.
 
 
 # Kart = zagr_img("acvalang.jpg")

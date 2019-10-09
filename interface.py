@@ -9,12 +9,15 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QRegExp
 from PyQt5.QtGui import QRegExpValidator
+from PyQt5.QtGui import QPixmap
 
 
 class Ui_MainWindow(object):
+    """Інтерфейс програми."""
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(634, 372)
+        MainWindow.resize(1200, 800)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred,
                                            QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -97,6 +100,14 @@ class Ui_MainWindow(object):
         self.label.setFrameShadow(QtWidgets.QFrame.Plain)
         self.label.setObjectName("label")
         self.label.setScaledContents(True)  # Подгонка под размер содержимого
+
+        # Елементи для просмотра за груженного и обработанного изображений
+        # set a scaled pixmap to a w x h window keeping its aspect ratio
+        self.origin_image = QtWidgets.QLabel(self.centralwidget)
+        self.origin_image.setGeometry(QtCore.QRect(20, 120, 500, 500))
+
+        self.edited_image = QtWidgets.QLabel(self.centralwidget)
+        self.edited_image.setGeometry(QtCore.QRect(540, 120, 500, 500))
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
