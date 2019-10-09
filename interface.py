@@ -5,19 +5,22 @@
 # Created by: PyQt5 UI code generator 5.6
 #
 # WARNING! All changes made in this file will be lost!
-
+import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QRegExp
 from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtGui import QPixmap
 
 
 class Ui_MainWindow(object):
     """Інтерфейс програми."""
+    # def __init__(self):
+    #     super().__init__()
+
+    #     self.setupUi()
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1200, 800)
+        MainWindow.resize(1200, 650)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred,
                                            QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -90,7 +93,7 @@ class Ui_MainWindow(object):
 
         # Інформація про розмір зображення
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(20, 12, 900, 30))
+        self.label.setGeometry(QtCore.QRect(50, 12, 900, 30))
         font_l = QtGui.QFont()
         font_l.setFamily("NewsGoth BT")
         font_l.setPointSize(20)
@@ -104,13 +107,29 @@ class Ui_MainWindow(object):
         # Елементи для просмотра за груженного и обработанного изображений
         # set a scaled pixmap to a w x h window keeping its aspect ratio
         self.origin_image = QtWidgets.QLabel(self.centralwidget)
-        self.origin_image.setGeometry(QtCore.QRect(20, 120, 500, 500))
+        self.origin_image.setGeometry(QtCore.QRect(60, 120, 500, 500))
 
         self.edited_image = QtWidgets.QLabel(self.centralwidget)
-        self.edited_image.setGeometry(QtCore.QRect(540, 120, 500, 500))
+        self.edited_image.setGeometry(QtCore.QRect(580, 120, 500, 500))
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        # Диалоговое окно вибора файла.
+        # openFile = QAction(QIcon('open.png'), 'Open', self)
+
+        # self.openFile = QAction(QIcon('open.png'), 'Open')
+        # self.openFile.setShortcut('Ctrl+O')
+        # self.openFile.setStatusTip('Open new File')
+        # self.openFile.triggered.connect(self.showDialog)
+
+        # menubar = QtWidgets.QMenuBar()
+        # fileMenu = menubar.addMenu('&File')
+        # fileMenu.addAction(self.openFile)
+
+        # self.setGeometry(300, 300, 350, 300)
+        # self.setWindowTitle('File dialog')
+        # self.show()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -118,3 +137,13 @@ class Ui_MainWindow(object):
         self.zagruzka.setText(_translate("MainWindow", "Загр."))
         self.prosmotr.setText(_translate("MainWindow", "Просм."))
         self.label.setText(_translate("MainWindow", "Розмір зображення: "))
+
+    def showDialog(self):
+
+        fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
+
+        f = open(fname, 'r')
+
+        with f:
+            data = f.read()
+            self.textEdit.setText(data)

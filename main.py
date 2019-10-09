@@ -29,8 +29,7 @@ Kartinka = None
 
 
 def zagruzka_kartinki():
-    text = ui.lineEdit_1.text()
-    if text:
+
         shablon = "Розмір зображення: "
         global Kartinka
 
@@ -47,14 +46,18 @@ def zagruzka_kartinki():
 
         ui.label.setText(shablon + str(width) +
                          " на " + str(height) + " пікселів.")
-    else:
-        ui.lineEdit_1.setText('1')
 
 
 def prosmotr_kartinki():
+    text = ui.lineEdit_1.text()
+    if text and text != '0':
+        pass
+    else:
+        ui.lineEdit_1.setText('1')
 
     if Kartinka:
         print(Kartinka)
+    # ui.showDialog()
 
 
 ui.zagruzka.clicked.connect(zagruzka_kartinki)
