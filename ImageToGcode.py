@@ -11,8 +11,14 @@ def zagr_img(name_file):
     return Image.open(name_file)
 
 
-# Kart = zagr_img("acvalang.jpg")
-# print(Kart)
+# def size_pixel_f(width, height, scale):
+#     """Визначення розміру пікселя."""
+#     # width = image.size[0]  # Определяем ширину.
+#     # height = image.size[1]  # Определяем висоту.
+#     size_pixel = int(ceil(min(width, height) / scale))
+
+#     return size_pixel
+
 
 
 def pixelisation_image(image, scale):
