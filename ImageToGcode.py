@@ -6,20 +6,20 @@ from settings import Settings
 s = Settings()
 
 
-def zagr_img(name_file="acvalang.jpg"):
+def zagr_img(name_file):
     """Завантаження зображення."""
-    return Image.open(r"Image\\"[:-1] + name_file)
+    return Image.open(name_file)
 
 
 # Kart = zagr_img("acvalang.jpg")
 # print(Kart)
 
 
-def pixelisation_image(image, name_file, scale):
+def pixelisation_image(image, scale):
     """Візуалізація розбивки картинки більші фрагменти."""
 # image, draw, width, height, pix, name_file = zagr_img()
 
-    draw = ImageDraw.Draw(image)  # Создаем инструмент для рисования.
+    # draw = ImageDraw.Draw(image)  # Создаем инструмент для рисования.
     width = image.size[0]  # Определяем ширину.
     height = image.size[1]  # Определяем висоту.
     pix = image.load()
@@ -59,7 +59,7 @@ def pixelisation_image(image, name_file, scale):
             edited_image = f.ris_pixel(h_p, w_p, size_pixel, S, image)
         # del draw
     print('ok')
-    return edited_image, koords
+    return edited_image, size_pixel, koords
 
 
 def i_to_g(koords, name_file, name_file_G="GcFI.tap"):

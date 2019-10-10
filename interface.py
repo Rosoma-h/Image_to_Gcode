@@ -81,7 +81,7 @@ class TitleWindow(QMainWindow):
         self.size_pixel_out.setFrameStyle(1)
         self.size_pixel_out.setFont(font_info_edit)
         self.size_pixel_out.setAlignment(QtCore.Qt.AlignRight |
-                                         QtCore.Qt.AlignBottom)
+                                         QtCore.Qt.AlignBaseline)
 
         # Валидатор
         reg_ex = QRegExp("[0-9]+[0-9]")
@@ -109,7 +109,7 @@ class TitleWindow(QMainWindow):
         openFile = QAction(QIcon('open.png'), 'Open', self)
         openFile.setShortcut('Ctrl+O')
         openFile.setStatusTip('Open new File')
-        openFile.triggered.connect(self.showDialog)
+        # openFile.triggered.connect(self.showDialog)
 
         menubar = self.menuBar()
         fileMenu = menubar.addMenu('&Файл')
@@ -118,17 +118,12 @@ class TitleWindow(QMainWindow):
 
         self.show()
 
-    def showDialog(self):
+    def showDialog(self, loc="\Home"):
 
-        loc = ("E:\\PUc\\Proekts\\Project_Image_To_Gcode\\source\\ImageToGcode - UI\\Image\\")
+        print(loc)
+
         fname = QFileDialog.getOpenFileName(self, 'Open file', loc)[0]
-        # print(fname)
         return fname
-        # f = open(fname, 'r')
-
-        # with f:
-        #     data = f.read()
-        #     # self.textEdit.setText(data)
 
 
 if __name__ == '__main__':

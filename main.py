@@ -1,12 +1,12 @@
 import sys
+from os import getcwd
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
-from QFileDialog import TitleWindow
+from interface import TitleWindow
 from PyQt5.QtGui import QPixmap
 from PIL import ImageQt
 
 from ImageToGcode import zagr_img, pixelisation_image
-
 
 
 # import sys
@@ -33,19 +33,19 @@ Kartinka = None
 
 def zagruzka_kartinki():
 
-    file_name = ui.showDialog()
-    print(file_name)
+    loc = getcwd()
+    file_name = ui.showDialog(loc)
 
     global Kartinka
     try:
         Kartinka = zagr_img(file_name)
     except:
-        print('Hrin')
+        print('Не удалось открыть файл!')
 
 
     width = Kartinka.size[0]  # Определяем ширину.
     height = Kartinka.size[1]  # Определяем висоту.
-    print(width, height)
+
     origin_data = ImageQt.ImageQt(Kartinka)
     origin_pixmap = QPixmap.fromImage(origin_data)
     origin_pixmap = origin_pixmap.scaled(QtCore.QSize(500, 500), 1, 1)
@@ -58,26 +58,35 @@ def zagruzka_kartinki():
 
 
 def prosmotr_kartinki():
-    pass
-    # text = ui.lineEdit_1.text()
-    # if text and text != '0':
-    #     pass
-    # else:
-    #     ui.lineEdit_1.setText('1')
 
-    # if Kartinka:
-    #     print(Kartinka)
+    global Kartinka
 
-    #     scale = int(float(ui.lineEdit_1.text()))
-    #     edited_img = pixelisation_image(Kartinka, "acvalang.jpg", scale)[0]
-    #     print(edited_img)
-    #     # Тут має бути код, який змінює картинку
+    text = ui.scale_input.text()
+    if Kartinka:
+        print("Shtukis")
+        ui.size_pixel_out.setText(str(34))
+        # if text and text != '0':
 
-    #     edited_data = ImageQt.ImageQt(Kartinka)
-    #     edited_pixmap = QPixmap.fromImage(edited_data)
-    #     edited_pixmap = edited_pixmap.scaled(QtCore.QSize(500, 500), 1, 1)
+        #     print(Kartinka)
 
-    #     ui.edited_image.setPixmap(edited_pixmap)
+        #     scale = int(float(ui.scale_input.text()))
+        #     edited_img, size_pixel, koord = pixelisation_image(Kartinka, scale)
+
+        #     ui.size_pixel_out = str(size_pixel)
+        #     print(edited_img)
+        #     # Тут має бути код, який змінює картинку
+        #     ui.size_pixel_out.setText(str(size_pixel)
+        #     # edited_data = ImageQt.ImageQt(edited_img)
+        #     # edited_pixmap = QPixmap.fromImage(edited_data)
+
+        #     # ui.edited_image.setPixmap(edited_pixmap)
+
+        # else:
+
+        #     size_start = str(min(Kartinka.size[0], Kartinka.size[1]))
+        #     ui.scale_input.setText(size_start)
+
+
 
 # Events
 
