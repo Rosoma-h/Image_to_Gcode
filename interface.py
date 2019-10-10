@@ -1,52 +1,31 @@
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'zad_1.ui'
-#
-# Created by: PyQt5 UI code generator 5.6
-#
-# WARNING! All changes made in this file will be lost!
 import sys
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
+from PyQt5.QtWidgets import (QMainWindow, QPushButton,
+                             QAction, QFileDialog, QApplication)
 from PyQt5.QtCore import QRegExp
-from PyQt5.QtGui import QRegExpValidator
+# QWidget,  QTextEdit,  QLabel,  QSizePolicy)
+from PyQt5.QtGui import QIcon, QRegExpValidator
 
 
-class Ui_MainWindow(object):
-    """Інтерфейс програми."""
-    # def __init__(self):
-    #     super().__init__()
+class TitleWindow(QMainWindow):
 
-    #     self.setupUi()
+    def __init__(self):
+        super().__init__()
 
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1200, 650)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred,
-                                           QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            MainWindow.sizePolicy().hasHeightForWidth())
-        MainWindow.setSizePolicy(sizePolicy)
-        MainWindow.setMinimumSize(QtCore.QSize(800, 400))
-        MainWindow.setMaximumSize(QtCore.QSize(1980, 1080))
-        MainWindow.setLocale(QtCore.QLocale(QtCore.QLocale.Ukrainian,
-                                            QtCore.QLocale.Ukraine))
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Ignored,
-                                           QtWidgets.QSizePolicy.Ignored)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.centralwidget.sizePolicy().hasHeightForWidth())
-        self.centralwidget.setSizePolicy(sizePolicy)
-        self.centralwidget.setObjectName("centralwidget")
-        self.zagruzka = QtWidgets.QPushButton(self.centralwidget)
-        self.zagruzka.setGeometry(QtCore.QRect(50, 50, 100, 50))
-        self.prosmotr = QtWidgets.QPushButton(self.centralwidget)
-        self.prosmotr.setGeometry(QtCore.QRect(200, 50, 100, 50))
+        self.initUI()
 
+    def initUI(self):
+
+        self.statusBar()
+        self.setGeometry(200, 200, 1200, 700)
+        self.setWindowTitle("ImageToGcode")
+        self.setMinimumSize(QtCore.QSize(800, 400))
+        self.setMaximumSize(QtCore.QSize(1600, 900))
+
+        # Установки шрифта на кнопки
         font_button = QtGui.QFont()
         font_button.setFamily("Consolas")
         font_button.setPointSize(22)
@@ -56,94 +35,105 @@ class Ui_MainWindow(object):
         font_button.setStrikeOut(False)
         font_button.setKerning(True)
 
+        # Кнопка загрузки изображения
+        self.zagruzka = QPushButton('Загрузка', self)
+        self.zagruzka.setGeometry(QtCore.QRect(30, 30, 150, 50))
         self.zagruzka.setFont(font_button)
-        self.zagruzka.setCheckable(False)
-        self.zagruzka.setObjectName("pushButton")
+
+        # Кнопка просмотра редактированного изображения
+        self.prosmotr = QPushButton('Перегляд', self)
+        self.prosmotr.setGeometry(QtCore.QRect(210, 30, 150, 50))
         self.prosmotr.setFont(font_button)
-        self.prosmotr.setCheckable(False)
-        self.prosmotr.setObjectName("prosmotr_btn")
 
-        self.lineEdit_1 = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_1.setGeometry(QtCore.QRect(400, 50, 40, 20))
-        font = QtGui.QFont()
-        font.setFamily("MS Shell Dlg 2")
-        self.lineEdit_1.setFont(font)
+        # Информация про размер изображения
+        self.info_picture = QtWidgets.QLabel("Розмір зображення: ", self)
+        self.info_picture.setGeometry(QtCore.QRect(390, 30, 550, 30))
 
-        self.lineEdit_1.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
-        # self.lineEdit_1.setInputMethodHints
-        # (QtCore.Qt.ImhDialableCharactersOnly
-        # |QtCore.Qt.ImhDigitsOnly|QtCore.Qt.ImhFormattedNumbersOnly
-        # |QtCore.Qt.ImhNoPredictiveText)
+        font_info = QtGui.QFont()
+        font_info.setFamily("NewsGoth BT")
+        # font_info.setFamily("NewsGoth BT")
+        font_info.setPointSize(20)
+
+        self.info_picture.setFont(font_info)
+        self.info_picture.setFrameStyle(1)
+
+        # Информация о параметрах редактирования изображения
+        self.sclale_show = QtWidgets.QLabel("Кратність: ", self)
+        self.sclale_show.setGeometry(QtCore.QRect(410, 60, 190, 30))
+        self.size_pixel = QtWidgets.QLabel("Розмір пікселя: ", self)
+        self.size_pixel.setGeometry(QtCore.QRect(410, 90, 190, 30))
+
+        self.sclale_show.setFont(font_info)
+        self.size_pixel.setFont(font_info)
+
+        # Поля ввода для параметров редактирования изображения
+        self.scale_input = QtWidgets.QLineEdit(self)
+        self.scale_input.setGeometry(QtCore.QRect(600, 60, 100, 30))
+        self.scale_input.setAlignment(QtCore.Qt.AlignRight |
+                                      QtCore.Qt.AlignBottom)
+        font_info_edit = font_info
+        font_info_edit.setFamily("Consolas")
+
+        self.scale_input.setFont(font_info_edit)
+
+        self.size_pixel_out = QtWidgets.QLabel(self)
+        self.size_pixel_out.setGeometry(QtCore.QRect(600, 90, 100, 30))
+        self.size_pixel_out.setFrameStyle(1)
+        self.size_pixel_out.setFont(font_info_edit)
+        self.size_pixel_out.setAlignment(QtCore.Qt.AlignRight |
+                                         QtCore.Qt.AlignBottom)
 
         # Валидатор
         reg_ex = QRegExp("[0-9]+[0-9]")
-        input_validator = QRegExpValidator(reg_ex, self.lineEdit_1)
-        self.lineEdit_1.setValidator(input_validator)
-        self.lineEdit_1.setInputMask("")
+        input_validator = QRegExpValidator(reg_ex, self.scale_input)
+        self.scale_input.setValidator(input_validator)
+        self.scale_input.setInputMask("")
 
-        self.lineEdit_1.setCursorPosition(0)
-        self.lineEdit_1.setMaxLength(5)
-        self.lineEdit_1.setFrame(True)
-        self.lineEdit_1.setClearButtonEnabled(False)
-        self.lineEdit_1.setObjectName("lineEdit_1")
-        self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_2.setGeometry(QtCore.QRect(400, 90, 151, 20))
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        # MainWindow.setCentralWidget(self.centralwidget)
+        self.scale_input.setCursorPosition(0)
+        self.scale_input.setMaxLength(5)
+        self.scale_input.setFrame(True)
+        self.scale_input.setClearButtonEnabled(False)
+        self.scale_input.setObjectName("scale_input")
 
-        # Інформація про розмір зображення
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(50, 12, 900, 30))
-        font_l = QtGui.QFont()
-        font_l.setFamily("NewsGoth BT")
-        font_l.setPointSize(20)
-        self.label.setFont(font_l)
-
-        self.label.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.label.setFrameShadow(QtWidgets.QFrame.Plain)
-        self.label.setObjectName("label")
-        self.label.setScaledContents(True)  # Подгонка под размер содержимого
-
-        # Елементи для просмотра за груженного и обработанного изображений
+        # Елементы для просмотра загруженного и обработанного изображений
         # set a scaled pixmap to a w x h window keeping its aspect ratio
-        self.origin_image = QtWidgets.QLabel(self.centralwidget)
-        self.origin_image.setGeometry(QtCore.QRect(60, 120, 500, 500))
+        self.origin_image = QtWidgets.QLabel(self)
+        self.origin_image.setGeometry(QtCore.QRect(60, 150, 500, 500))
+        self.origin_image.setFrameStyle(1)
 
-        self.edited_image = QtWidgets.QLabel(self.centralwidget)
-        self.edited_image.setGeometry(QtCore.QRect(580, 120, 500, 500))
-
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.edited_image = QtWidgets.QLabel(self)
+        self.edited_image.setGeometry(QtCore.QRect(580, 150, 500, 500))
+        self.edited_image.setFrameStyle(1)
 
         # Диалоговое окно вибора файла.
-        # openFile = QAction(QIcon('open.png'), 'Open', self)
+        openFile = QAction(QIcon('open.png'), 'Open', self)
+        openFile.setShortcut('Ctrl+O')
+        openFile.setStatusTip('Open new File')
+        openFile.triggered.connect(self.showDialog)
 
-        # self.openFile = QAction(QIcon('open.png'), 'Open')
-        # self.openFile.setShortcut('Ctrl+O')
-        # self.openFile.setStatusTip('Open new File')
-        # self.openFile.triggered.connect(self.showDialog)
+        menubar = self.menuBar()
+        fileMenu = menubar.addMenu('&Файл')
+        fileMenu.addAction(openFile)
+        fileMenu = menubar.addMenu('&Інфо')
 
-        # menubar = QtWidgets.QMenuBar()
-        # fileMenu = menubar.addMenu('&File')
-        # fileMenu.addAction(self.openFile)
-
-        # self.setGeometry(300, 300, 350, 300)
-        # self.setWindowTitle('File dialog')
-        # self.show()
-
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("ImageToGcode", "ImageToGcode"))
-        self.zagruzka.setText(_translate("MainWindow", "Загр."))
-        self.prosmotr.setText(_translate("MainWindow", "Просм."))
-        self.label.setText(_translate("MainWindow", "Розмір зображення: "))
+        self.show()
 
     def showDialog(self):
 
-        fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')[0]
+        loc = ("E:\\PUc\\Proekts\\Project_Image_To_Gcode\\source\\ImageToGcode - UI\\Image\\")
+        fname = QFileDialog.getOpenFileName(self, 'Open file', loc)[0]
+        # print(fname)
+        return fname
+        # f = open(fname, 'r')
 
-        f = open(fname, 'r')
+        # with f:
+        #     data = f.read()
+        #     # self.textEdit.setText(data)
 
-        with f:
-            data = f.read()
-            self.textEdit.setText(data)
+
+if __name__ == '__main__':
+
+    app = QApplication(sys.argv)
+    Form = QtWidgets.QWidget()
+    ex = TitleWindow()
+    sys.exit(app.exec_())
