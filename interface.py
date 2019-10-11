@@ -106,15 +106,17 @@ class TitleWindow(QMainWindow):
         self.edited_image.setFrameStyle(1)
 
         # Диалоговое окно вибора файла.
-        openFile = QAction(QIcon('open.png'), 'Open', self)
-        openFile.setShortcut('Ctrl+O')
-        openFile.setStatusTip('Open new File')
+        self.openFile = QAction(QIcon('open.png'),
+                                'Відкрити файл...    ',
+                                self)
+        self.openFile.setShortcut('Ctrl+O')
+        self.openFile.setStatusTip('Відкрити новий файл')
         # openFile.triggered.connect(self.showDialog)
 
-        menubar = self.menuBar()
-        fileMenu = menubar.addMenu('&Файл')
-        fileMenu.addAction(openFile)
-        fileMenu = menubar.addMenu('&Інфо')
+        self.menubar = self.menuBar()
+        self.fileMenu = self.menubar.addMenu('&Файл')
+        self.fileMenu.addAction(self.openFile)
+        self.fileMenu = self.menubar.addMenu('&Інфо')
 
         self.show()
 

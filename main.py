@@ -42,20 +42,20 @@ def zagruzka_kartinki():
     except:
         print('Не удалось открыть файл!')
 
-    print(Kartinka)
-    width = Kartinka.size[0]  # Определяем ширину.
-    height = Kartinka.size[1]  # Определяем висоту.
+    if Kartinka:
+        print(Kartinka)
+        width = Kartinka.size[0]  # Определяем ширину.
+        height = Kartinka.size[1]  # Определяем висоту.
 
-    origin_data = ImageQt.ImageQt(Kartinka)
-    origin_pixmap = QPixmap.fromImage(origin_data)
-    origin_pixmap = origin_pixmap.scaled(QtCore.QSize(500, 500), 1, 1)
+        origin_data = ImageQt.ImageQt(Kartinka)
+        origin_pixmap = QPixmap.fromImage(origin_data)
+        origin_pixmap = origin_pixmap.scaled(QtCore.QSize(500, 500), 1, 1)
 
-    ui.origin_image.setPixmap(origin_pixmap)
+        ui.origin_image.setPixmap(origin_pixmap)
 
-    shablon = "Розмір зображення: "
-    ui.info_picture.setText(shablon + str(width) +
-                            " на " + str(height) + " пікселів.")
-    # return Kartinka
+        shablon = "Розмір зображення: "
+        ui.info_picture.setText(shablon + str(width) +
+                                " на " + str(height) + " пікселів.")
 
 
 def prosmotr_kartinki():
@@ -91,6 +91,7 @@ def prosmotr_kartinki():
 # Events
 
 
+ui.openFile.triggered.connect(zagruzka_kartinki)
 ui.zagruzka.clicked.connect(zagruzka_kartinki)
 ui.prosmotr.clicked.connect(prosmotr_kartinki)
 
