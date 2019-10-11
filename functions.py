@@ -1,7 +1,7 @@
 from PIL import ImageDraw
 
 
-def ris_pixel(h_p, w_p, size_pixel, S, image, ris=1):
+def ris_pixel(h_p, w_p, size_pixel, S, image, first_lap, ris=2):
     """Функція для заповнення квадратної області пікселями"""
     # Імітація пікселізації
     # Вигляд рисунку пікселя: 1 - суцільний квадрат
@@ -20,17 +20,31 @@ def ris_pixel(h_p, w_p, size_pixel, S, image, ris=1):
 # width –
 # The line width, in pixels.
 
+# Очистка заднього фону
+    # draw = ImageDraw.Draw(image)
+    # draw.rectangle((0, 0, width, height), (255, 0, 0))
+
     # rectangle(xy, fill=None, outline=None, width=0)
     # range_size = range(size_pixel)
+    h_p_add = h_p + size_pixel
+    w_p_add = w_p + size_pixel
 
     draw = ImageDraw.Draw(image)
+    if first_lap:
+        width = image.size[0]  # Определяем ширину.
+        height = image.size[1]  # Определяем висоту.
+        draw.rectangle((0, 0, width, height), (255, 0, 0))
+
     if ris == 1:
-        for i in range(size_pixel):
-            for j in range(size_pixel):
-                draw.point((i + w_p, j + h_p), (S, S, S))
-    # elif ris == 2:
-        # if size_pixel % 2 != 0:
-            # size_pixel -= 1
+        if size_pixel != 1:
+            draw.rectangle((w_p, h_p, w_p_add, h_p_add), (S, S, S))
+        else:
+            for i in range(size_pixel):
+                for j in range(size_pixel):
+                    draw.point((i + w_p, j + h_p), (S, S, S))
+    elif ris == 2:
+        draw.ellipse((w_p, h_p, w_p_add, h_p_add), (S, S, S))
+
         # for i in range(int(size_pixel / 2)):
             # for j in range(int(size_pixel / 2)):
                 # wi = i + w_p

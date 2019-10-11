@@ -1,4 +1,5 @@
-from PIL import Image, ImageDraw
+import copy
+from PIL import Image
 from math import ceil
 import functions as f
 from settings import Settings
@@ -21,16 +22,14 @@ def zagr_img(name_file):
 
 
 def pixelisation_image(image, scale):
-    """Візуалізація розбивки картинки більші фрагменти."""
-# image, draw, width, height, pix, name_file = zagr_img()
-
-    # draw = ImageDraw.Draw(image)  # Создаем инструмент для рисования.
+    """Візуалізація розбивки картинки на більші фрагменти."""
+    edited_image = copy.deepcopy(image)
     width = image.size[0]  # Определяем ширину.
     height = image.size[1]  # Определяем висоту.
     pix = image.load()
-
+    # Первый проход
+    first_lap = True
     koords = []
-    # scale = int(input("Деталізація: "))
     # обчислення розму "пікселя" пікселізації
     size_pixel = int(ceil(min(width, height) / scale))
     range_size = range(size_pixel)
@@ -62,8 +61,11 @@ def pixelisation_image(image, scale):
                                      s.max_Z, s.koef))
 
             # Імітація "пікселізації" зображення
-            edited_image = f.ris_pixel(h_p, w_p, size_pixel, S, image)
-        # del draw
+            edited_image = f.ris_pixel(h_p, w_p, size_pixel, S, edited_image,
+                                       first_lap)
+            if first_lap:
+                first_lap = False
+
     print('ok')
     return edited_image, size_pixel, koords
 
