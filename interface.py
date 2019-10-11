@@ -122,8 +122,6 @@ class TitleWindow(QMainWindow):
 
     def showDialog(self, loc="\Home"):
 
-        print(loc)
-
         fname = QFileDialog.getOpenFileName(self, 'Open file', loc)[0]
         return fname
 

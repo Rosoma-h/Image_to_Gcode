@@ -20,7 +20,6 @@ def zagr_img(name_file):
 #     return size_pixel
 
 
-
 def pixelisation_image(image, scale):
     """Візуалізація розбивки картинки більші фрагменти."""
 # image, draw, width, height, pix, name_file = zagr_img()
