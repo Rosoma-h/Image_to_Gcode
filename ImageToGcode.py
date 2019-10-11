@@ -33,7 +33,8 @@ def pixelisation_image(image, scale):
     # scale = int(input("Деталізація: "))
     # обчислення розму "пікселя" пікселізації
     size_pixel = int(ceil(min(width, height) / scale))
-    print("Розмір пікселя: ", size_pixel)
+    range_size = range(size_pixel)
+    # print("Розмір пікселя: ", size_pixel)
     range_h = int(height / size_pixel)
     range_w = int(width / size_pixel)
     box_h = range_h * size_pixel
@@ -47,8 +48,8 @@ def pixelisation_image(image, scale):
             h_p = h * size_pixel + de_h
             w_p = w * size_pixel + de_w
             # Обчислення середнього кольору пікеля
-            for i in range(size_pixel):
-                for j in range(size_pixel):
+            for i in range_size:
+                for j in range_size:
                     # print(pix[i, j])
                     R = pix[i + w_p, j + h_p][0]
                     G = pix[i + w_p, j + h_p][1]

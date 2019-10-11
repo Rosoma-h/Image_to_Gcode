@@ -9,6 +9,20 @@ def ris_pixel(h_p, w_p, size_pixel, S, image, ris=1):
     # від величини Diam (від 0,1 до 1)
     # ris = 1
 
+    #     Draws an ellipse inside the given bounding box.
+# PIL.ImageDraw.ImageDraw.ellipse(xy, fill=None, outline=None, width=0)
+# Parameters:
+# xy – Two points to define the bounding box.
+# Sequence of either [(x0, y0), (x1, y1)] or [x0, y0, x1, y1],
+# where x1 >= x0 and y1 >= y0.
+# outline – Color to use for the outline.
+# fill – Color to use for the fill.
+# width –
+# The line width, in pixels.
+
+    # rectangle(xy, fill=None, outline=None, width=0)
+    # range_size = range(size_pixel)
+
     draw = ImageDraw.Draw(image)
     if ris == 1:
         for i in range(size_pixel):
