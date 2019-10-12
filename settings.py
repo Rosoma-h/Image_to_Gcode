@@ -14,7 +14,7 @@ class Settings():
         self.filtr_z = 0.5
 
         # Параметри для зображення
-        self.koef = 8
+        self.koef = 1
 
         # Параметри для виводу обробленого зображення
         self.ris = 1

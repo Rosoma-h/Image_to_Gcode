@@ -5,35 +5,18 @@ def ris_pixel(h_p, w_p, size_pixel, S, image, first_lap, ris=2):
     """Функція для заповнення квадратної області пікселями"""
     # Імітація пікселізації
     # Вигляд рисунку пікселя: 1 - суцільний квадрат
-    # 2 - ромб з розміром рівним або меншим розміру пікселя, в залежності
-    # від величини Diam (від 0,1 до 1)
-    # ris = 1
+    # 2 - коло, в залежності (від величини Diam (від 0,1 до 1))
 
-    #     Draws an ellipse inside the given bounding box.
-# PIL.ImageDraw.ImageDraw.ellipse(xy, fill=None, outline=None, width=0)
-# Parameters:
-# xy – Two points to define the bounding box.
-# Sequence of either [(x0, y0), (x1, y1)] or [x0, y0, x1, y1],
-# where x1 >= x0 and y1 >= y0.
-# outline – Color to use for the outline.
-# fill – Color to use for the fill.
-# width –
-# The line width, in pixels.
-
-# Очистка заднього фону
     # draw = ImageDraw.Draw(image)
     # draw.rectangle((0, 0, width, height), (255, 0, 0))
-
-    # rectangle(xy, fill=None, outline=None, width=0)
-    # range_size = range(size_pixel)
     h_p_add = h_p + size_pixel
     w_p_add = w_p + size_pixel
 
     draw = ImageDraw.Draw(image)
-    if first_lap:
+    if first_lap:  # Очистка заднього фону
         width = image.size[0]  # Определяем ширину.
         height = image.size[1]  # Определяем висоту.
-        draw.rectangle((0, 0, width, height), (255, 0, 0))
+        draw.rectangle((0, 0, width, height), (255, 255, 255))
 
     if ris == 1:
         if size_pixel != 1:
@@ -44,12 +27,6 @@ def ris_pixel(h_p, w_p, size_pixel, S, image, first_lap, ris=2):
                     draw.point((i + w_p, j + h_p), (S, S, S))
     elif ris == 2:
         draw.ellipse((w_p, h_p, w_p_add, h_p_add), (S, S, S))
-
-        # for i in range(int(size_pixel / 2)):
-            # for j in range(int(size_pixel / 2)):
-                # wi = i + w_p
-                # he =  j + h_p
-                # draw.point((wi, he), (S, S, S))
 
     return image
 
