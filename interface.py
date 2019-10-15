@@ -3,7 +3,7 @@
 
 import sys
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import (QMainWindow, QPushButton,
+from PyQt5.QtWidgets import (QMainWindow, QGridLayout,
                              QAction, QFileDialog, QApplication)
 from PyQt5.QtCore import QRegExp
 # QWidget,  QTextEdit,  QLabel,  QSizePolicy)
@@ -11,6 +11,8 @@ from PyQt5.QtGui import QIcon, QRegExpValidator
 
 
 class L_Edit(QtWidgets.QLineEdit):
+    """Параметри стандартного поля вводу."""
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -24,6 +26,7 @@ class L_Edit(QtWidgets.QLineEdit):
         self.setFrame(True)
         self.setClearButtonEnabled(False)
 
+        self.setFixedSize(100, 30)
         # Установки шрифта на поля ввода
         font_edit = QtGui.QFont()
         font_edit.setFamily("Consolas")
@@ -39,13 +42,15 @@ class L_Edit(QtWidgets.QLineEdit):
 
 
 class Butt(QtWidgets.QPushButton):
+    """Параметри стандартної кнопки."""
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Установки шрифта на кнопки
         font_button = QtGui.QFont()
         font_button.setFamily("Consolas")
-        font_button.setPointSize(22)
+        font_button.setPointSize(18)
         font_button.setBold(True)
         font_button.setItalic(True)
         font_button.setWeight(50)
@@ -53,6 +58,19 @@ class Butt(QtWidgets.QPushButton):
         font_button.setKerning(True)
 
         self.setFont(font_button)
+
+
+class Nadpis(QtWidgets.QLabel):
+    """Параметри стандарного надпису."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Установки шрифта на написах
+        font_info = QtGui.QFont()
+        font_info.setFamily("NewsGoth BT")
+        font_info.setPointSize(14)
+
+        self.setFont(font_info)
 
 
 class TitleWindow(QMainWindow):
@@ -65,20 +83,10 @@ class TitleWindow(QMainWindow):
     def initUI(self):
 
         self.statusBar()
-        self.setGeometry(150, 150, 1500, 700)
+        self.setGeometry(150, 150, 1600, 700)
         self.setWindowTitle("ImageToGcode")
         self.setMinimumSize(QtCore.QSize(1200, 700))
         self.setMaximumSize(QtCore.QSize(1920, 1080))
-
-        # Установки шрифта на кнопки
-        font_button = QtGui.QFont()
-        font_button.setFamily("Consolas")
-        font_button.setPointSize(22)
-        font_button.setBold(True)
-        font_button.setItalic(True)
-        font_button.setWeight(50)
-        font_button.setStrikeOut(False)
-        font_button.setKerning(True)
 
         # Кнопка загрузки изображения
         self.zagruzka = Butt('Загрузка', self)
@@ -93,43 +101,29 @@ class TitleWindow(QMainWindow):
         self.save_doc.setGeometry(QtCore.QRect(1150, 620, 250, 50))
 
         # Информация про размер изображения
-        self.info_picture = QtWidgets.QLabel("Розмір зображення: ", self)
+        self.info_picture = Nadpis("Розмір зображення: ", self)
         self.info_picture.setGeometry(QtCore.QRect(190, 30, 550, 30))
-
-        font_info = QtGui.QFont()
-        font_info.setFamily("NewsGoth BT")
-        font_info.setPointSize(20)
-
-        self.info_picture.setFont(font_info)
         self.info_picture.setFrameStyle(1)
 
         # Информация о параметрах редактирования изображения
-        self.sclale_show = QtWidgets.QLabel("Кратність: ", self)
-        self.sclale_show.setGeometry(QtCore.QRect(210, 60, 190, 30))
-        self.size_pixel = QtWidgets.QLabel("Розмір пікселя: ", self)
+        self.scale_show = Nadpis("Кратність: ", self)
+        self.scale_show.setGeometry(QtCore.QRect(210, 60, 190, 30))
+        self.size_pixel = Nadpis("Розмір пікселя: ", self)
         self.size_pixel.setGeometry(QtCore.QRect(210, 90, 190, 30))
 
-        self.sclale_show.setFont(font_info)
-        self.size_pixel.setFont(font_info)
-
-        font_info_edit = font_info
-        font_info_edit.setFamily("Consolas")
-
-        self.size_pixel_out = QtWidgets.QLabel(self)
+        # Вывод размера пикселя
+        self.size_pixel_out = Nadpis(self)
         self.size_pixel_out.setGeometry(QtCore.QRect(400, 90, 100, 30))
         self.size_pixel_out.setFrameStyle(1)
-        self.size_pixel_out.setFont(font_info_edit)
         self.size_pixel_out.setAlignment(QtCore.Qt.AlignRight |
                                          QtCore.Qt.AlignBaseline)
 
-
-
         # Елементы для просмотра загруженного и обработанного изображений
-        self.origin_image = QtWidgets.QLabel(self)
+        self.origin_image = Nadpis(self)
         self.origin_image.setGeometry(QtCore.QRect(60, 150, 500, 500))
         self.origin_image.setFrameStyle(1)
 
-        self.edited_image = QtWidgets.QLabel(self)
+        self.edited_image = Nadpis(self)
         self.edited_image.setGeometry(QtCore.QRect(580, 150, 500, 500))
         self.edited_image.setFrameStyle(1)
 
@@ -137,30 +131,73 @@ class TitleWindow(QMainWindow):
         self.scale_input = L_Edit(self)
         self.scale_input.setGeometry(QtCore.QRect(400, 60, 100, 30))
 
+        # # Поля ввода Размеров заготовки
+        self.rozmir = Nadpis('Розмір заготовки', self)
+        self.Vertic_size = Nadpis('Висота', self)
+        self.Horiz_size = Nadpis('Ширина', self)
+        self.unit1 = Nadpis('мм', self)
+        self.unit2 = Nadpis('мм', self)
+
+        self.Vertic_size_input = L_Edit(self)
+        self.Horiz_size_input = L_Edit(self)
+
+        # Сетка из елементов для размеров заготовки
+        zagotovka = QGridLayout()
+        self.setLayout(zagotovka)
+        zagotovka.setSpacing(10)
+
+        zagotovka.addWidget(self.rozmir, 1, 1, 1, 5)
+
+        zagotovka.addWidget(self.Vertic_size, 2, 0)
+        zagotovka.addWidget(self.Vertic_size_input, 2, 1)
+        zagotovka.addWidget(self.unit1, 2, 3)
+
+        zagotovka.addWidget(self.Horiz_size, 3, 0)
+        zagotovka.addWidget(self.Horiz_size_input, 3, 1)
+        zagotovka.addWidget(self.unit2, 3, 3)
+
+        zagotovka.setGeometry(QtCore.QRect(1280, 80, 230, 100))
+
+        # Надписи названий полей
+        self.max_Z_n = Nadpis('Максимальна глибина', self)
+        self.z_safe_n = Nadpis('Висота безпеки', self)
+        self.feed_z_n = Nadpis('Вертикальна подача', self)
+        self.filtr_z_n = Nadpis('Мінімальний поріг глибини', self)
+
+        # Надписи единиц измерения
+        self.unit3 = Nadpis('мм', self)
+        self.unit4 = Nadpis('мм', self)
+        self.unit5 = Nadpis('мм/хв', self)
+        self.unit6 = Nadpis('мм', self)
+
         # Поля ввода для параметров для создания управляющей программы
         self.max_Z_input = L_Edit(self)
-        self.max_Z_input.setGeometry(QtCore.QRect(1250, 220, 100, 30))
-
         self.z_safe_input = L_Edit(self)
-        self.z_safe_input.setGeometry(QtCore.QRect(1250, 255, 100, 30))
-
         self.feed_z_input = L_Edit(self)
-        self.feed_z_input.setGeometry(QtCore.QRect(1250, 290, 100, 30))
-
         self.filtr_z_input = L_Edit(self)
-        self.filtr_z_input.setGeometry(QtCore.QRect(1250, 325, 100, 30))
 
-        # self.scale_input = L_Edit(self)
-        # self.scale_input.setGeometry(QtCore.QRect(1250, 360, 100, 30))
+        # Сетка из елементов для параметров станка
+        cnc_params = QGridLayout()
+        self.setLayout(cnc_params)
+        cnc_params.setSpacing(10)
 
-        # self.scale_input = L_Edit(self)
-        # self.scale_input.setGeometry(QtCore.QRect(1250, 395, 100, 30))
+        cnc_params.addWidget(self.max_Z_n, 1, 0)
+        cnc_params.addWidget(self.max_Z_input, 1, 1)
+        cnc_params.addWidget(self.unit3, 1, 2)
 
-        # self.scale_input = L_Edit(self)
-        # self.scale_input.setGeometry(QtCore.QRect(1250, 430, 100, 30))
+        cnc_params.addWidget(self.z_safe_n, 2, 0)
+        cnc_params.addWidget(self.z_safe_input, 2, 1)
+        cnc_params.addWidget(self.unit4, 2, 2)
 
+        cnc_params.addWidget(self.feed_z_n, 3, 0)
+        cnc_params.addWidget(self.feed_z_input, 3, 1,)
+        cnc_params.addWidget(self.unit5, 3, 2)
 
+        cnc_params.addWidget(self.filtr_z_n, 4, 0)
+        cnc_params.addWidget(self.filtr_z_input, 4, 1,)
+        cnc_params.addWidget(self.unit6, 4, 2)
 
+        cnc_params.setGeometry(QtCore.QRect(1110, 240, 415, 150))
 
         # Диалоговое окно вибора файла.
         self.openFile = QAction(QIcon('open.png'),
