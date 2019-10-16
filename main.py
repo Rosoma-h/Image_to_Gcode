@@ -117,8 +117,6 @@ def calculate_path_gcode():
     default_parameters = [V_size, H_size, koords, feed_z,
                           z_safe, depth_Z, filtr_z]
     work_parameters = check_input_values(default_parameters)
-    print(default_parameters)
-    print(work_parameters)
     print("Гынырацыя Гы кода")
     try:
         Gcode = calculate_gcode(*work_parameters)
@@ -138,7 +136,6 @@ def save_g_code():
         loc = getcwd()
 
     file_name = ui.show_save_Dialog(loc)
-    print(file_name)
 
     try:
         save_g_to_file(file_name, Gcode)
