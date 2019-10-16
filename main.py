@@ -52,7 +52,6 @@ def zagruzka_kartinki():
         print('Не удалось открыть файл!')
 
     if Kartinka:
-        print(Kartinka)
         width = Kartinka.size[0]  # Определяем ширину.
         height = Kartinka.size[1]  # Определяем висоту.
 
@@ -77,7 +76,6 @@ def prosmotr_kartinki():
     text = ui.scale_input.text()
 
     if local_img:
-        print("Shtukis")
 
         if text and text != '0':
 
@@ -106,17 +104,25 @@ def calculate_path_gcode():
     global koords
     global Gcode
 
-    print("Гынырацыя Гы кода")
     # Очистка даних
     Gcode = ""
     # Задание настроек по умолчанию
-    z_safe = def_set.z_safe
+    V_size = def_set.V_size
+    H_size = def_set.V_size
     feed_z = def_set.feed_z
-    max_Z = def_set.max_Z
+    z_safe = def_set.z_safe
+    depth_Z = def_set.depth_Z
     filtr_z = def_set.filtr_z
 
+    default_parameters = [V_size, H_size, koords, feed_z,
+                          z_safe, depth_Z, filtr_z]
+    work_parameters = check_input_values(default_parameters)
+    print(default_parameters)
+    print(work_parameters)
+    print("Гынырацыя Гы кода")
     try:
-        Gcode = calculate_gcode(koords, z_safe, feed_z, max_Z, filtr_z)
+        Gcode = calculate_gcode(*work_parameters)
+        print("Код згынырырован")
     except:
         print('Не удалось рассчитать траеторию')
 
@@ -141,6 +147,45 @@ def save_g_code():
 
     except:
         print('Не удалось сохранить файл!')
+
+
+def check_input_values(default_parameters):
+    """ Проверка наличия парраметров в полях ввода, при наличии
+        конвертация строкового формата в числовой."""
+    global koords
+    input_fields = (ui.Vertic_size_input.text(),
+                    ui.Horiz_size_input.text(),
+                    koords,
+                    ui.feed_z_input.text(),
+                    ui.z_safe_input.text(),
+                    ui.depth_Z_input.text(),
+                    ui.filtr_z_input.text()
+                    )
+
+    def check(par_def, par_inp):
+        if par_inp:
+            return par_inp
+        else:
+            return par_def
+
+    def convert_to_digit(d):
+
+        if isinstance(d, str):
+            try:
+                return int(d)
+            except:
+                try:
+                    return float(d)
+                except:
+                    pass
+        else:
+            return d
+
+
+    params = map(check, default_parameters, input_fields)
+    work_parameters = [convert_to_digit(x) for x in params]
+
+    return work_parameters
 
 
 # Events

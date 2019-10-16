@@ -2,23 +2,11 @@ import copy
 from PIL import Image
 from math import ceil
 import functions as f
-from settings import Settings
-
-s = Settings()
 
 
 def zagr_img(name_file):
     """Завантаження зображення."""
     return Image.open(name_file)
-
-
-# def size_pixel_f(width, height, scale):
-#     """Визначення розміру пікселя."""
-#     # width = image.size[0]  # Определяем ширину.
-#     # height = image.size[1]  # Определяем висоту.
-#     size_pixel = int(ceil(min(width, height) / scale))
-
-#     return size_pixel
 
 
 def pixelisation_image(image, scale):
@@ -53,20 +41,18 @@ def pixelisation_image(image, scale):
                     R = pix[i + w_p, j + h_p][0]
                     G = pix[i + w_p, j + h_p][1]
                     B = pix[i + w_p, j + h_p][2]
-                    S = R + G + B
-            S = int(S / 3)
+                    S_gray_color = R + G + B
+            S_gray_color = int(S_gray_color / 3)
 
             # Додавання координат і глибини до списку
-            koords.append(f.pos_glub(h_p, w_p, size_pixel, S,
-                                     s.max_Z, s.koef))
+            koords.append(f.pos_glub(h_p, w_p, size_pixel, S_gray_color))
 
             # Імітація "пікселізації" зображення
-            edited_image = f.ris_pixel(h_p, w_p, size_pixel, S, edited_image,
-                                       first_lap)
+            edited_image = f.ris_pixel(h_p, w_p, size_pixel, S_gray_color,
+                                       edited_image, first_lap)
             if first_lap:
                 first_lap = False
 
-    print('ok')
     return edited_image, size_pixel, koords
 
 
@@ -77,16 +63,3 @@ def save_g_to_file(name_file_G, Gcode):
     f_gcode.close()
 
     return None
-
-
-# def i_to_g(koords, name_file, name_file_G="GcFI.tap"):
-#     # Створення і запис програми для станка у файл
-#     GcodeBody = f.Gcode_Body(koords, s.z_safe, s.feed_z, s.max_Z, s.filtr_z)
-#     f_gcode = open(r"Gcodes\\"[:-1] + name_file.split(".")[0] + "_" +
-#                    name_file_G, "w")
-#     f_gcode.write(f.head_end()[0] + GcodeBody + f.head_end()[1])
-#     f_gcode.close()
-
-#     print("Готово!")
-
-#     return None

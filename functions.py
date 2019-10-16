@@ -31,20 +31,17 @@ def ris_pixel(h_p, w_p, size_pixel, S, image, first_lap, ris=2):
     return image
 
 
-def pos_glub(h_p, w_p, size_pixel, S, max_Z, koef):
+def pos_glub(h_p, w_p, size_pixel, S_gray_color):
     """Функція для визначення позиції і глибини точки на заготовці"""
 
-    # Визначення позиції точки в пікселях
+    # Визначення позиції точки на площині XY в пікселях
     half_pixel = size_pixel / 2
     X = w_p + half_pixel
     Y = h_p + half_pixel
-    # Визначення позиції точки в міліметрах, koef=4 pix/mm
-    X /= koef
-    Y /= koef
-    # Визначення глибини опускання фрези у міліметрах
-    Z = S / 255 * max_Z
+    # Визначення глибини опускання фрези від 0 до 1
+    Z = round(S_gray_color / 255, 2)
 
-    return X, Y, round(Z, 1)
+    return X, Y, Z
 
 
 def head_end():
@@ -63,28 +60,36 @@ M30'''
     return GcodeHead, GcodeEnd
 
 
-def calculate_gcode(koords, z_safe, feed_z, max_Z, filtr_z):
+def calculate_gcode(V_size, H_size, koords, feed_z, z_safe,
+                    depth_Z, filtr_z):
     """Функція створює управляючу програму для станка
         на основі списку координат"""
+    # print("1")
+    # if V_size and H_size:
+
+    #     print("Rozmir zagotovki zadano")
+    # else:
+    #     print("Vidsutnya zagotovka")
 
     head_gcode, end_gcode = head_end()
-
+    # print("2")
     body_gcode = ""
     for tochka in koords:
         # tochka_Z = tochka[2] - "негатив" зображення
-        # tochka_Z = max_Z - tochka[2] "позитив" зображення
-        tochka_Z = round(max_Z - tochka[2], 2)
+        # tochka_Z = depth_Z - tochka[2] "позитив" зображення
+        tochka_Z = round(- depth_Z * tochka[2], 2)
+        # print("3")
         # Додавання координати з глибиною більшою за filtr_z
-        if tochka_Z >= filtr_z:
+        if abs(tochka_Z) >= filtr_z:
             body_gcode += ("G0" + "X" + str(tochka[0]) +
-                                 "Y" + str(tochka[1]) +
-                                 "Z" + str(z_safe) + "\n"
-                          )
-            body_gcode += ("G1" + "Z-" + str(tochka_Z) + "F" +
-                          str(feed_z) + "\n" +
-                          "G0" + "Z" + str(z_safe) + "\n"
-                          )
+                           "Y" + str(tochka[1]) +
+                           "Z" + str(z_safe) + "\n"
+                           )
+            body_gcode += ("G1" + "Z" + str(tochka_Z) + "F" +
+                           str(feed_z) + "\n" +
+                           "G0" + "Z" + str(z_safe) + "\n"
+                           )
 
-        Gcode = head_gcode + body_gcode + end_gcode
+    Gcode = head_gcode + body_gcode + end_gcode
 
     return Gcode

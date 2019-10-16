@@ -140,17 +140,17 @@ class TitleWindow(QMainWindow):
         self.Vertic_size = Nadpis('Висота', self)
         self.Horiz_size = Nadpis('Ширина', self)
         self.blank = Nadpis('', self)
-        self.max_Z_n = Nadpis('Максимальна глибина', self)
-        self.z_safe_n = Nadpis('Висота безпеки', self)
         self.feed_z_n = Nadpis('Вертикальна подача', self)
+        self.z_safe_n = Nadpis('Висота безпеки', self)
+        self.depth_Z_n = Nadpis('Максимальна глибина', self)
         self.filtr_z_n = Nadpis('Мінімальний поріг глибини', self)
 
         # Надписи единиц измерения
         self.unit1 = Nadpis('мм', self)
         self.unit2 = Nadpis('мм', self)
-        self.unit3 = Nadpis('мм', self)
+        self.unit3 = Nadpis('мм/хв', self)
         self.unit4 = Nadpis('мм', self)
-        self.unit5 = Nadpis('мм/хв', self)
+        self.unit5 = Nadpis('мм', self)
         self.unit6 = Nadpis('мм', self)
 
         self.rozmir.setFixedSize(150, 30)
@@ -159,9 +159,9 @@ class TitleWindow(QMainWindow):
         # Поля ввода для параметров для создания управляющей программы
         self.Vertic_size_input = L_Edit(self)
         self.Horiz_size_input = L_Edit(self)
-        self.max_Z_input = L_Edit(self)
-        self.z_safe_input = L_Edit(self)
         self.feed_z_input = L_Edit(self)
+        self.z_safe_input = L_Edit(self)
+        self.depth_Z_input = L_Edit(self)
         self.filtr_z_input = L_Edit(self)
 
         # Сетка из елементов для параметров станка
@@ -181,16 +181,16 @@ class TitleWindow(QMainWindow):
 
         cnc_params.addWidget(self.blank, 4, 0)
 
-        cnc_params.addWidget(self.max_Z_n, 5, 0)
-        cnc_params.addWidget(self.max_Z_input, 5, 1)
+        cnc_params.addWidget(self.feed_z_n, 5, 0)
+        cnc_params.addWidget(self.feed_z_input, 5, 1)
         cnc_params.addWidget(self.unit3, 5, 2)
 
         cnc_params.addWidget(self.z_safe_n, 6, 0)
         cnc_params.addWidget(self.z_safe_input, 6, 1)
         cnc_params.addWidget(self.unit4, 6, 2)
 
-        cnc_params.addWidget(self.feed_z_n, 7, 0)
-        cnc_params.addWidget(self.feed_z_input, 7, 1,)
+        cnc_params.addWidget(self.depth_Z_n, 7, 0)
+        cnc_params.addWidget(self.depth_Z_input, 7, 1,)
         cnc_params.addWidget(self.unit5, 7, 2)
 
         cnc_params.addWidget(self.filtr_z_n, 8, 0)

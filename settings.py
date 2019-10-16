@@ -6,12 +6,15 @@ class Settings():
         # max_Z=5, koef=4 pix/mm, ris=1, z_safe=0.5, feed_z=1000
 
         # Параметри для станка
-        self.max_Z = 5
-        self.z_safe = 0.5
+        self.V_size = 0
+        self.H_size = 0
+        self.z_safe = 1
         self.feed_z = 1000
+        self.depth_Z = 5
+
 
         # В програму вносяться координати величина яких >= filtr_z
-        self.filtr_z = 0.5
+        self.filtr_z = 2.5
 
         # Параметри для зображення
         self.koef = 1
