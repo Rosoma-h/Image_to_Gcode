@@ -3,21 +3,15 @@ import copy
 from os import getcwd
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
-from interface import TitleWindow
 from PyQt5.QtGui import QPixmap
 from PIL import ImageQt
 
-from ImageToGcode import zagr_img, pixelisation_image
+from interface import TitleWindow
+from ImageToGcode import zagr_img, pixelisation_image, save_g_to_file
+from functions import calculate_gcode
+from settings import Settings
 
-# import sys
-# from PyQt5 import QtWidgets
-# from PyQt5 import QtCore
-# from PyQt5.QtGui import QPixmap
-# from PIL import ImageQt
-
-# from interface import Ui_MainWindow
-# from ImageToGcode import zagr_img, pixelisation_image
-
+def_set = Settings()
 
 # Create aplication
 app = QApplication(sys.argv)
@@ -28,17 +22,32 @@ ui = TitleWindow()
 # Body
 # Define name Kartinka for downloaded image
 global Kartinka
+global koords
+global Gcode
+global opening_directory
+global saving_directory
 Kartinka = None
+koords = None
+Gcode = "# Epty file"
+opening_directory = ""
+saving_directory = ""
 
 
 def zagruzka_kartinki():
 
-    loc = getcwd()
-    file_name = ui.showDialog(loc)
-
     global Kartinka
+    global opening_directory
+
+    if opening_directory:
+        loc = opening_directory
+    else:
+        loc = getcwd()
+    file_name = ui.show_open_Dialog(loc)
+
     try:
         Kartinka = zagr_img(file_name)
+        # Фіксація положення останнього відкритого файлу
+        opening_directory = file_name[:file_name.rfind("/") + 1]
     except:
         print('Не удалось открыть файл!')
 
@@ -61,6 +70,7 @@ def zagruzka_kartinki():
 def prosmotr_kartinki():
 
     global Kartinka
+    global koords
 
     local_img = copy.deepcopy(Kartinka)
 
@@ -73,8 +83,8 @@ def prosmotr_kartinki():
 
             scale = int(float(ui.scale_input.text()))
 
-            edited_img, size_pixel, koord = pixelisation_image(local_img,
-                                                               scale)
+            edited_img, size_pixel, koords = pixelisation_image(local_img,
+                                                                scale)
 
             ui.size_pixel_out.setText(str(size_pixel))
             edited_data = ImageQt.ImageQt(edited_img)
@@ -85,8 +95,53 @@ def prosmotr_kartinki():
 
         else:
 
-            size_start = str(min(local_img.size[0], local_img.size[1]))
+            size_start = str(int(min(local_img.size[0],
+                                     local_img.size[1]) / 10)
+                             )
             ui.scale_input.setText(size_start)
+
+
+def calculate_path_gcode():
+    # Генерация файла с Gcode
+    global koords
+    global Gcode
+
+    print("Гынырацыя Гы кода")
+    # Очистка даних
+    Gcode = ""
+    # Задание настроек по умолчанию
+    z_safe = def_set.z_safe
+    feed_z = def_set.feed_z
+    max_Z = def_set.max_Z
+    filtr_z = def_set.filtr_z
+
+    try:
+        Gcode = calculate_gcode(koords, z_safe, feed_z, max_Z, filtr_z)
+    except:
+        print('Не удалось рассчитать траеторию')
+
+
+
+def save_g_code():
+
+    global Gcode
+    global saving_directory
+    if saving_directory:
+        loc = saving_directory
+    else:
+        loc = getcwd()
+
+    file_name = ui.show_save_Dialog(loc)
+    print(file_name)
+
+    try:
+        save_g_to_file(file_name, Gcode)
+        # Фіксація положення останнього збереженого файлу
+        saving_directory = file_name[:file_name.rfind("/") + 1]
+
+    except:
+        print('Не удалось сохранить файл!')
+
 
 # Events
 
@@ -94,6 +149,8 @@ def prosmotr_kartinki():
 ui.openFile.triggered.connect(zagruzka_kartinki)
 ui.zagruzka.clicked.connect(zagruzka_kartinki)
 ui.prosmotr.clicked.connect(prosmotr_kartinki)
+ui.calculate_path.clicked.connect(calculate_path_gcode)
+ui.save_doc.clicked.connect(save_g_code)
 
 
 # Run main loop

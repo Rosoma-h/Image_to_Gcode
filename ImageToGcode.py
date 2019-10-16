@@ -70,15 +70,23 @@ def pixelisation_image(image, scale):
     return edited_image, size_pixel, koords
 
 
-def i_to_g(koords, name_file, name_file_G="GcFI.tap"):
-    # Створення і запис програми для станка у файл
-    GcodeBody = f.Gcode_Body(koords, s.z_safe, s.feed_z, s.max_Z, s.filtr_z)
-    f_gcode = open(r"Gcodes\\"[:-1] + name_file.split(".")[0] + "_" +
-                   name_file_G, "w")
-    f_gcode.write(f.head_end()[0] + GcodeBody + f.head_end()[1])
+def save_g_to_file(name_file_G, Gcode):
+    # Запис програми у файл
+    f_gcode = open(name_file_G, "w")
+    f_gcode.write(Gcode)
     f_gcode.close()
-    # print("Кльксть точок: ", h * w)
-    # image.save(r"Imgage\\"[:-1] + "_edited_" + name_file, "JPEG")
-    print("Готово!")
-    # input()
+
     return None
+
+
+# def i_to_g(koords, name_file, name_file_G="GcFI.tap"):
+#     # Створення і запис програми для станка у файл
+#     GcodeBody = f.Gcode_Body(koords, s.z_safe, s.feed_z, s.max_Z, s.filtr_z)
+#     f_gcode = open(r"Gcodes\\"[:-1] + name_file.split(".")[0] + "_" +
+#                    name_file_G, "w")
+#     f_gcode.write(f.head_end()[0] + GcodeBody + f.head_end()[1])
+#     f_gcode.close()
+
+#     print("Готово!")
+
+#     return None

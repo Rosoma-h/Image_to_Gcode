@@ -48,13 +48,14 @@ def pos_glub(h_p, w_p, size_pixel, S, max_Z, koef):
 
 
 def head_end():
-    """Функція повертає оформлені початок і закінчення файлу з G-кодом"""
+    """Функція повертає початок і закінчення файлу з G-кодом
+    для програми NC Studio."""
 
     GcodeHead = '''M3
 G0Z50.000
-G0X50.000Y50.000S18000 \n'''
+G0X0.000Y0.000S18000 \n'''
     GcodeEnd = '''G0Z50.000
-G0X50.000Y50.000
+G0X0.000Y0.000
 G0Z50.000
 G0X0Y0
 M30'''
@@ -62,23 +63,28 @@ M30'''
     return GcodeHead, GcodeEnd
 
 
-def Gcode_Body(koords, z_safe, feed_z, max_Z, filtr_z):
+def calculate_gcode(koords, z_safe, feed_z, max_Z, filtr_z):
     """Функція створює управляючу програму для станка
         на основі списку координат"""
 
-    # z_safe=0.5, feed_z=100
-    GcodeBody = ""
+    head_gcode, end_gcode = head_end()
+
+    body_gcode = ""
     for tochka in koords:
         # tochka_Z = tochka[2] - "негатив" зображення
         # tochka_Z = max_Z - tochka[2] "позитив" зображення
         tochka_Z = round(max_Z - tochka[2], 2)
-        if tochka_Z >= filtr_z:  # Умова потрібна для введення фільтра
-            GcodeBody += ("G0" + "X" + str(tochka[0]) +
+        # Додавання координати з глибиною більшою за filtr_z
+        if tochka_Z >= filtr_z:
+            body_gcode += ("G0" + "X" + str(tochka[0]) +
                                  "Y" + str(tochka[1]) +
                                  "Z" + str(z_safe) + "\n"
                           )
-            GcodeBody += ("G1" + "Z-" + str(tochka_Z) + "F" +
+            body_gcode += ("G1" + "Z-" + str(tochka_Z) + "F" +
                           str(feed_z) + "\n" +
                           "G0" + "Z" + str(z_safe) + "\n"
                           )
-    return GcodeBody
+
+        Gcode = head_gcode + body_gcode + end_gcode
+
+    return Gcode

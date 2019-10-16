@@ -85,7 +85,7 @@ class TitleWindow(QMainWindow):
         self.statusBar()
         self.setGeometry(150, 150, 1600, 700)
         self.setWindowTitle("ImageToGcode")
-        self.setMinimumSize(QtCore.QSize(1200, 700))
+        self.setMinimumSize(QtCore.QSize(1600, 700))
         self.setMaximumSize(QtCore.QSize(1920, 1080))
 
         # Кнопка загрузки изображения
@@ -95,6 +95,10 @@ class TitleWindow(QMainWindow):
         # Кнопка просмотра редактированного изображения
         self.prosmotr = Butt('Перегляд', self)
         self.prosmotr.setGeometry(QtCore.QRect(510, 65, 150, 50))
+
+        # Кнопка рассчета программы
+        self.calculate_path = Butt('Розрахувати траєкторію', self)
+        self.calculate_path.setFixedSize(300, 30)
 
         # Кнопка сохранения Gcode
         self.save_doc = Butt('Зберегти файл', self)
@@ -131,46 +135,30 @@ class TitleWindow(QMainWindow):
         self.scale_input = L_Edit(self)
         self.scale_input.setGeometry(QtCore.QRect(400, 60, 100, 30))
 
-        # # Поля ввода Размеров заготовки
+        # Надписи названий полей
         self.rozmir = Nadpis('Розмір заготовки', self)
         self.Vertic_size = Nadpis('Висота', self)
         self.Horiz_size = Nadpis('Ширина', self)
-        self.unit1 = Nadpis('мм', self)
-        self.unit2 = Nadpis('мм', self)
-
-        self.Vertic_size_input = L_Edit(self)
-        self.Horiz_size_input = L_Edit(self)
-
-        # Сетка из елементов для размеров заготовки
-        zagotovka = QGridLayout()
-        self.setLayout(zagotovka)
-        zagotovka.setSpacing(10)
-
-        zagotovka.addWidget(self.rozmir, 1, 1, 1, 5)
-
-        zagotovka.addWidget(self.Vertic_size, 2, 0)
-        zagotovka.addWidget(self.Vertic_size_input, 2, 1)
-        zagotovka.addWidget(self.unit1, 2, 3)
-
-        zagotovka.addWidget(self.Horiz_size, 3, 0)
-        zagotovka.addWidget(self.Horiz_size_input, 3, 1)
-        zagotovka.addWidget(self.unit2, 3, 3)
-
-        zagotovka.setGeometry(QtCore.QRect(1280, 80, 230, 100))
-
-        # Надписи названий полей
+        self.blank = Nadpis('', self)
         self.max_Z_n = Nadpis('Максимальна глибина', self)
         self.z_safe_n = Nadpis('Висота безпеки', self)
         self.feed_z_n = Nadpis('Вертикальна подача', self)
         self.filtr_z_n = Nadpis('Мінімальний поріг глибини', self)
 
         # Надписи единиц измерения
+        self.unit1 = Nadpis('мм', self)
+        self.unit2 = Nadpis('мм', self)
         self.unit3 = Nadpis('мм', self)
         self.unit4 = Nadpis('мм', self)
         self.unit5 = Nadpis('мм/хв', self)
         self.unit6 = Nadpis('мм', self)
 
+        self.rozmir.setFixedSize(150, 30)
+        self.blank.setFixedSize(150, 30)
+
         # Поля ввода для параметров для создания управляющей программы
+        self.Vertic_size_input = L_Edit(self)
+        self.Horiz_size_input = L_Edit(self)
         self.max_Z_input = L_Edit(self)
         self.z_safe_input = L_Edit(self)
         self.feed_z_input = L_Edit(self)
@@ -181,23 +169,37 @@ class TitleWindow(QMainWindow):
         self.setLayout(cnc_params)
         cnc_params.setSpacing(10)
 
-        cnc_params.addWidget(self.max_Z_n, 1, 0)
-        cnc_params.addWidget(self.max_Z_input, 1, 1)
-        cnc_params.addWidget(self.unit3, 1, 2)
+        cnc_params.addWidget(self.rozmir, 1, 1, 1, 2)
 
-        cnc_params.addWidget(self.z_safe_n, 2, 0)
-        cnc_params.addWidget(self.z_safe_input, 2, 1)
-        cnc_params.addWidget(self.unit4, 2, 2)
+        cnc_params.addWidget(self.Vertic_size, 2, 0)
+        cnc_params.addWidget(self.Vertic_size_input, 2, 1)
+        cnc_params.addWidget(self.unit1, 2, 2)
 
-        cnc_params.addWidget(self.feed_z_n, 3, 0)
-        cnc_params.addWidget(self.feed_z_input, 3, 1,)
-        cnc_params.addWidget(self.unit5, 3, 2)
+        cnc_params.addWidget(self.Horiz_size, 3, 0)
+        cnc_params.addWidget(self.Horiz_size_input, 3, 1)
+        cnc_params.addWidget(self.unit2, 3, 2)
 
-        cnc_params.addWidget(self.filtr_z_n, 4, 0)
-        cnc_params.addWidget(self.filtr_z_input, 4, 1,)
-        cnc_params.addWidget(self.unit6, 4, 2)
+        cnc_params.addWidget(self.blank, 4, 0)
 
-        cnc_params.setGeometry(QtCore.QRect(1110, 240, 415, 150))
+        cnc_params.addWidget(self.max_Z_n, 5, 0)
+        cnc_params.addWidget(self.max_Z_input, 5, 1)
+        cnc_params.addWidget(self.unit3, 5, 2)
+
+        cnc_params.addWidget(self.z_safe_n, 6, 0)
+        cnc_params.addWidget(self.z_safe_input, 6, 1)
+        cnc_params.addWidget(self.unit4, 6, 2)
+
+        cnc_params.addWidget(self.feed_z_n, 7, 0)
+        cnc_params.addWidget(self.feed_z_input, 7, 1,)
+        cnc_params.addWidget(self.unit5, 7, 2)
+
+        cnc_params.addWidget(self.filtr_z_n, 8, 0)
+        cnc_params.addWidget(self.filtr_z_input, 8, 1,)
+        cnc_params.addWidget(self.unit6, 8, 2)
+
+        cnc_params.addWidget(self.calculate_path, 9, 0)
+
+        cnc_params.setGeometry(QtCore.QRect(1110, 80, 590, 300))
 
         # Диалоговое окно вибора файла.
         self.openFile = QAction(QIcon('open.png'),
@@ -214,9 +216,15 @@ class TitleWindow(QMainWindow):
 
         self.show()
 
-    def showDialog(self, loc="\Home"):
+    def show_open_Dialog(self, loc="\Home"):
 
-        fname = QFileDialog.getOpenFileName(self, 'Open file', loc)[0]
+        fname = QFileDialog.getOpenFileName(self, 'Open file', loc,
+                                "Image Files (*.png *.jpg *.bmp)")[0]
+        return fname
+
+    def show_save_Dialog(self, loc="\Home"):
+        fname = QFileDialog.getSaveFileName(self, 'Save Gcode', loc,
+            "G-Ccode (mm)(*.tap);;All files(*.*)")[0]
         return fname
 
 
