@@ -5,9 +5,9 @@ import sys
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import (QMainWindow, QGridLayout,
                              QAction, QFileDialog, QApplication)
-from PyQt5.QtCore import QRegExp
+# from PyQt5.QtCore import QRegExp
 # QWidget,  QTextEdit,  QLabel,  QSizePolicy)
-from PyQt5.QtGui import QIcon, QRegExpValidator
+from PyQt5.QtGui import QIcon, QDoubleValidator, QIntValidator
 
 
 class L_Edit(QtWidgets.QLineEdit):
@@ -17,20 +17,16 @@ class L_Edit(QtWidgets.QLineEdit):
         super().__init__(*args, **kwargs)
 
         # Валидатор
-        reg_ex = QRegExp("[0-9]+[0-9]")
-        input_validator = QRegExpValidator(reg_ex, self)
+        input_validator = QDoubleValidator(0.0, 100.0, 2, self)
         self.setValidator(input_validator)
-        self.setInputMask("")
         self.setCursorPosition(0)
-        self.setMaxLength(5)
-        self.setFrame(True)
-        self.setClearButtonEnabled(False)
+        self.setMaxLength(7)
 
-        self.setFixedSize(100, 30)
+        self.setFixedSize(110, 30)
         # Установки шрифта на поля ввода
         font_edit = QtGui.QFont()
         font_edit.setFamily("Consolas")
-        font_edit.setPointSize(22)
+        font_edit.setPointSize(18)
         font_edit.setBold(True)
         font_edit.setItalic(False)
         font_edit.setWeight(50)
@@ -39,6 +35,16 @@ class L_Edit(QtWidgets.QLineEdit):
 
         self.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.setFont(font_edit)
+
+
+class L_Edit_int(L_Edit):
+    """Параметри цілочисельного поля вводу."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        input_validator = QIntValidator(1, 1000, self)
+        self.setValidator(input_validator)
 
 
 class Butt(QtWidgets.QPushButton):
@@ -94,7 +100,7 @@ class TitleWindow(QMainWindow):
 
         # Кнопка просмотра редактированного изображения
         self.prosmotr = Butt('Перегляд', self)
-        self.prosmotr.setGeometry(QtCore.QRect(510, 65, 150, 50))
+        self.prosmotr.setGeometry(QtCore.QRect(520, 65, 150, 50))
 
         # Кнопка рассчета программы
         self.calculate_path = Butt('Розрахувати траєкторію', self)
@@ -117,7 +123,7 @@ class TitleWindow(QMainWindow):
 
         # Вывод размера пикселя
         self.size_pixel_out = Nadpis(self)
-        self.size_pixel_out.setGeometry(QtCore.QRect(400, 90, 100, 30))
+        self.size_pixel_out.setGeometry(QtCore.QRect(400, 90, 110, 30))
         self.size_pixel_out.setFrameStyle(1)
         self.size_pixel_out.setAlignment(QtCore.Qt.AlignRight |
                                          QtCore.Qt.AlignBaseline)
@@ -132,8 +138,8 @@ class TitleWindow(QMainWindow):
         self.edited_image.setFrameStyle(1)
 
         # Поля ввода для параметров редактирования изображения
-        self.scale_input = L_Edit(self)
-        self.scale_input.setGeometry(QtCore.QRect(400, 60, 100, 30))
+        self.scale_input = L_Edit_int(self)
+        self.scale_input.setGeometry(QtCore.QRect(400, 60, 110, 30))
 
         # Надписи названий полей
         self.rozmir = Nadpis('Розмір заготовки', self)
