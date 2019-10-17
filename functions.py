@@ -75,9 +75,10 @@ def calculate_gcode(V_size, H_size, koords, feed_z, z_safe,
     # print("2")
     body_gcode = ""
     for tochka in koords:
-        # tochka_Z = tochka[2] - "негатив" зображення
-        # tochka_Z = depth_Z - tochka[2] "позитив" зображення
-        tochka_Z = round(- depth_Z * tochka[2], 2)
+
+        # 1 = білий колір, мінімальна глибина;
+        # 0 = чорний колір, максимальна глибина
+        tochka_Z = round(- depth_Z * (1 - tochka[2]), 2)
         # print("3")
         # Додавання координати з глибиною більшою за filtr_z
         if abs(tochka_Z) >= filtr_z:
