@@ -125,7 +125,6 @@ def calculate_path_gcode():
         print('Не удалось рассчитать траеторию')
 
 
-
 def save_g_code():
 
     global Gcode
@@ -149,20 +148,38 @@ def save_g_code():
 def check_input_values(default_parameters):
     """ Проверка наличия парраметров в полях ввода, при наличии
         конвертация строкового формата в числовой."""
+
+    global Kartinka
     global koords
-    input_fields = (ui.Vertic_size_input.text(),
-                    ui.Horiz_size_input.text(),
+    input_fields = (ui.Vertic_size_input,
+                    ui.Horiz_size_input,
                     koords,
-                    ui.feed_z_input.text(),
-                    ui.z_safe_input.text(),
-                    ui.depth_Z_input.text(),
-                    ui.filtr_z_input.text()
+                    ui.feed_z_input,
+                    ui.z_safe_input,
+                    ui.depth_Z_input,
+                    ui.filtr_z_input
                     )
 
+    V_size = ui.Vertic_size_input.text()
+    H_size = ui.Horiz_size_input.text()
+
+    if (
+        Kartinka
+            and (not(V_size) or V_size == "0")
+            and (not(H_size) or H_size == "0")
+        ):
+
+        ui.Vertic_size_input.setText(str(Kartinka.size[0]))
+        ui.Horiz_size_input.setText(str(Kartinka.size[1]))
+
     def check(par_def, par_inp):
-        if par_inp:
-            return par_inp
-        else:
+        try:
+            if par_inp.text():
+                return par_inp
+            else:
+                par_inp.setText(str(par_def))
+                return par_def
+        except:
             return par_def
 
     def convert_to_digit(d):
