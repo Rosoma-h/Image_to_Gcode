@@ -143,8 +143,8 @@ class TitleWindow(QMainWindow):
 
         # Надписи названий полей
         self.rozmir = Nadpis(12 * ' ' + 'Розмір зони обробки', self)
-        self.Horiz_size = Nadpis('Ширина', self)
-        self.Vertic_size = Nadpis('Висота', self)
+        self.Width_size = Nadpis('Ширина', self)
+        self.Height_size = Nadpis('Висота', self)
         self.blank = Nadpis('', self)
         self.feed_z_n = Nadpis('Вертикальна подача', self)
         self.z_safe_n = Nadpis('Висота безпеки', self)
@@ -163,8 +163,8 @@ class TitleWindow(QMainWindow):
         self.blank.setFixedSize(150, 30)
 
         # Поля ввода для параметров для создания управляющей программы
-        self.Horiz_size_input = L_Edit(self)
-        self.Vertic_size_input = L_Edit(self)
+        self.Width_size_input = L_Edit(self)
+        self.Height_size_input = L_Edit(self)
         self.feed_z_input = L_Edit(self)
         self.z_safe_input = L_Edit(self)
         self.depth_Z_input = L_Edit(self)
@@ -177,12 +177,12 @@ class TitleWindow(QMainWindow):
 
         cnc_params.addWidget(self.rozmir, 1, 0, 1, 2)
 
-        cnc_params.addWidget(self.Horiz_size, 2, 0)
-        cnc_params.addWidget(self.Horiz_size_input, 2, 1)
+        cnc_params.addWidget(self.Width_size, 2, 0)
+        cnc_params.addWidget(self.Width_size_input, 2, 1)
         cnc_params.addWidget(self.unit2, 2, 2)
 
-        cnc_params.addWidget(self.Vertic_size, 3, 0)
-        cnc_params.addWidget(self.Vertic_size_input, 3, 1)
+        cnc_params.addWidget(self.Height_size, 3, 0)
+        cnc_params.addWidget(self.Height_size_input, 3, 1)
         cnc_params.addWidget(self.unit1, 3, 2)
 
         cnc_params.addWidget(self.blank, 4, 0)

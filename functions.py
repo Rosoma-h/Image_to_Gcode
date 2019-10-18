@@ -1,10 +1,12 @@
+from PyQt5 import QtCore
+from PyQt5.QtGui import QPixmap
+from PIL import ImageQt
 from PIL import ImageDraw
 
 
-def ris_pixel(height_point, weigth_point,
+def ris_pixel(weigth_point, height_point,
               size_pixel, S, image, first_lap):
-    """Функція для заповнення квадратної області пікселями"""
-    # Імітація пікселізації
+    """Функція для заповнення квадратної області круглими пікселями"""
     # коло, в залежності (від величини S (від 0,0 до 1))
 
     # Очистка заднього фону
@@ -33,13 +35,13 @@ def ris_pixel(height_point, weigth_point,
     return image
 
 
-def pos_glub(h_p, w_p, size_pixel, S_depth):
+def pos_glub(wigth_p, height_p, size_pixel, S_depth):
     """Функція для визначення позиції і глибини точки на заготовці"""
 
     # Визначення позиції точки на площині XY в пікселях
     half_pixel = size_pixel / 2
-    X = w_p + half_pixel
-    Y = h_p + half_pixel
+    X = wigth_p + half_pixel
+    Y = height_p + half_pixel
     # Визначення глибини опускання фрези від 0 до 1
     Z = S_depth
 
@@ -62,7 +64,7 @@ M30'''
     return GcodeHead, GcodeEnd
 
 
-def calculate_gcode(V_size, H_size, koords, feed_z, z_safe,
+def calculate_gcode(Width_size, Height_size, koords, feed_z, z_safe,
                     depth_Z, filtr_z):
     """Функція створює управляючу програму для станка
         на основі списку координат"""
@@ -71,16 +73,12 @@ def calculate_gcode(V_size, H_size, koords, feed_z, z_safe,
     #     print("Rozmir zagotovki zadano")
     # else:
     #     print("Vidsutnya zagotovka")
-
     head_gcode, end_gcode = head_end()
-    # print("2")
     body_gcode = ""
     for tochka in koords:
-
         # 0 = білий колір, мінімальна глибина;
         # 1 = чорний колір, максимальна глибина
         tochka_Z = round(- depth_Z * tochka[2], 2)
-
         # Додавання координати з глибиною більшою за filtr_z
         if abs(tochka_Z) >= filtr_z:
             body_gcode += ("G0" + "X" + str(tochka[0]) +
@@ -95,3 +93,38 @@ def calculate_gcode(V_size, H_size, koords, feed_z, z_safe,
     Gcode = head_gcode + body_gcode + end_gcode
 
     return Gcode
+
+
+def convert_pil_image_to_QtPixmap(image):
+    """ """
+    image_data = ImageQt.ImageQt(image)
+    image_pixmap = QPixmap.fromImage(image_data)
+    image_pixmap = image_pixmap.scaled(QtCore.QSize(500, 500), 1, 1)
+
+    return image_pixmap
+
+
+def check(par_def, par_inp):
+    try:
+        if par_inp.text():
+            return par_inp.text()
+        else:
+            par_inp.setText(str(par_def))
+            return par_def
+    except:
+        return par_def
+
+    def convert_to_digit(d):
+
+        if isinstance(d, str):
+            try:
+                return int(d)
+            except:
+                try:
+                    return float(d)
+                except:
+                    pass
+        else:
+            return d
+
+    return work_parameters

@@ -6,10 +6,12 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QPixmap
 from PIL import ImageQt
 
+from settings import Settings
 from interface import TitleWindow
 from ImageToGcode import zagr_img, pixelisation_image, save_g_to_file
-from functions import calculate_gcode
-from settings import Settings
+from functions import calculate_gcode, convert_pil_image_to_QtPixmap
+    # convert_to_digit
+
 
 def_set = Settings()
 
@@ -52,15 +54,12 @@ def zagruzka_kartinki():
         print('Не удалось открыть файл!')
 
     if Kartinka:
-        width = Kartinka.size[0]  # Определяем ширину.
-        height = Kartinka.size[1]  # Определяем висоту.
 
-        origin_data = ImageQt.ImageQt(Kartinka)
-        origin_pixmap = QPixmap.fromImage(origin_data)
-        origin_pixmap = origin_pixmap.scaled(QtCore.QSize(500, 500), 1, 1)
-
+        origin_pixmap = convert_pil_image_to_QtPixmap(Kartinka)
         ui.origin_image.setPixmap(origin_pixmap)
 
+        width = Kartinka.size[0]  # Определяем ширину.
+        height = Kartinka.size[1]  # Определяем висоту.
         shablon = "Розмір зображення: "
         ui.info_picture.setText(shablon + str(width) +
                                 " на " + str(height) + " пікселів.")
@@ -83,19 +82,14 @@ def prosmotr_kartinki():
 
             edited_img, size_pixel, koords = pixelisation_image(local_img,
                                                                 scale)
-
             ui.size_pixel_out.setText(str(size_pixel))
-            edited_data = ImageQt.ImageQt(edited_img)
-            edited_pixmap = QPixmap.fromImage(edited_data)
-            edited_pixmap = edited_pixmap.scaled(QtCore.QSize(500, 500), 1, 1)
 
+            edited_pixmap = convert_pil_image_to_QtPixmap(edited_img)
             ui.edited_image.setPixmap(edited_pixmap)
 
         else:
-
             size_start = str(int(min(local_img.size[0],
-                                     local_img.size[1]) / 10)
-                             )
+                                     local_img.size[1]) / 10))
             ui.scale_input.setText(size_start)
 
 
@@ -116,6 +110,7 @@ def calculate_path_gcode():
 
     default_parameters = [W_size, H_size, koords, feed_z,
                           z_safe, depth_Z, filtr_z]
+
     work_parameters = check_input_values(default_parameters)
     print("Гынырацыя Гы кода")
     try:
@@ -150,8 +145,9 @@ def check_input_values(default_parameters):
         конвертация строкового формата в числовой."""
     global Kartinka
     global koords
-    input_fields = (ui.Horiz_size_input,
-                    ui.Vertic_size_input,
+
+    input_fields = (ui.Width_size_input,
+                    ui.Height_size_input,
                     koords,
                     ui.feed_z_input,
                     ui.z_safe_input,
@@ -159,8 +155,8 @@ def check_input_values(default_parameters):
                     ui.filtr_z_input
                     )
 
-    W_size = ui.Vertic_size_input.text()
-    H_size = ui.Horiz_size_input.text()
+    W_size = ui.Width_size_input.text()
+    H_size = ui.Height_size_input.text()
 
     if (
         Kartinka
@@ -168,13 +164,13 @@ def check_input_values(default_parameters):
             and (not(H_size) or H_size == "0")
         ):
 
-        ui.Horiz_size_input.setText(str(Kartinka.size[0]))
-        ui.Vertic_size_input.setText(str(Kartinka.size[1]))
+        ui.Width_size_input.setText(str(Kartinka.size[0]))
+        ui.Height_size_input.setText(str(Kartinka.size[1]))
 
     def check(par_def, par_inp):
         try:
             if par_inp.text():
-                return par_inp
+                return par_inp.text()
             else:
                 par_inp.setText(str(par_def))
                 return par_def
