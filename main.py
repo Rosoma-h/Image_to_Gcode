@@ -107,14 +107,14 @@ def calculate_path_gcode():
     # Очистка даних
     Gcode = ""
     # Задание настроек по умолчанию
-    V_size = def_set.V_size
-    H_size = def_set.V_size
+    W_size = def_set.W_size
+    H_size = def_set.H_size
     feed_z = def_set.feed_z
     z_safe = def_set.z_safe
     depth_Z = def_set.depth_Z
     filtr_z = def_set.filtr_z
 
-    default_parameters = [V_size, H_size, koords, feed_z,
+    default_parameters = [W_size, H_size, koords, feed_z,
                           z_safe, depth_Z, filtr_z]
     work_parameters = check_input_values(default_parameters)
     print("Гынырацыя Гы кода")
@@ -148,11 +148,10 @@ def save_g_code():
 def check_input_values(default_parameters):
     """ Проверка наличия парраметров в полях ввода, при наличии
         конвертация строкового формата в числовой."""
-
     global Kartinka
     global koords
-    input_fields = (ui.Vertic_size_input,
-                    ui.Horiz_size_input,
+    input_fields = (ui.Horiz_size_input,
+                    ui.Vertic_size_input,
                     koords,
                     ui.feed_z_input,
                     ui.z_safe_input,
@@ -160,17 +159,17 @@ def check_input_values(default_parameters):
                     ui.filtr_z_input
                     )
 
-    V_size = ui.Vertic_size_input.text()
+    W_size = ui.Vertic_size_input.text()
     H_size = ui.Horiz_size_input.text()
 
     if (
         Kartinka
-            and (not(V_size) or V_size == "0")
+            and (not(W_size) or W_size == "0")
             and (not(H_size) or H_size == "0")
         ):
 
-        ui.Vertic_size_input.setText(str(Kartinka.size[0]))
-        ui.Horiz_size_input.setText(str(Kartinka.size[1]))
+        ui.Horiz_size_input.setText(str(Kartinka.size[0]))
+        ui.Vertic_size_input.setText(str(Kartinka.size[1]))
 
     def check(par_def, par_inp):
         try:
@@ -194,7 +193,6 @@ def check_input_values(default_parameters):
                     pass
         else:
             return d
-
 
     params = map(check, default_parameters, input_fields)
     work_parameters = [convert_to_digit(x) for x in params]

@@ -12,10 +12,10 @@ def zagr_img(name_file):
 def pixelisation_image(image, scale):
     """Візуалізація розбивки картинки на більші фрагменти."""
     edited_image = copy.deepcopy(image)
-    width = image.size[0]  # Определяем ширину.
-    height = image.size[1]  # Определяем висоту.
+    width = image.size[0]  # Визначаємо ширину картинки.
+    height = image.size[1]  # Визначаємо висоту картинки.
     pix = image.load()
-    # Первый проход
+    # Перший прохід по циклу
     first_lap = True
     koords = []
     # обчислення розму "пікселя" пікселізації
@@ -42,13 +42,13 @@ def pixelisation_image(image, scale):
                     G = pix[i + w_p, j + h_p][1]
                     B = pix[i + w_p, j + h_p][2]
                     S_depth = R + G + B
-            # Реверс кольору: темніше - глибше, світліше - мілче.
+            # Реверс кольору: темніше - глибше, світліше - менша глибина.
             S_depth = 1 - round(S_depth / 765, 3)  # 765 = 3 * 255
 
             # Додавання координат і глибини до списку
             koords.append(f.pos_glub(h_p, w_p, size_pixel, S_depth))
 
-            # Імітація "пікселізації" зображення
+            # Показ "пікселізації" зображення
             edited_image = f.ris_pixel(h_p, w_p, size_pixel, S_depth,
                                        edited_image, first_lap)
             if first_lap:

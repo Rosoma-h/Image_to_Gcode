@@ -142,9 +142,9 @@ class TitleWindow(QMainWindow):
         self.scale_input.setGeometry(QtCore.QRect(400, 60, 110, 30))
 
         # Надписи названий полей
-        self.rozmir = Nadpis('Розмір заготовки', self)
-        self.Vertic_size = Nadpis('Висота', self)
+        self.rozmir = Nadpis(12 * ' ' + 'Розмір зони обробки', self)
         self.Horiz_size = Nadpis('Ширина', self)
+        self.Vertic_size = Nadpis('Висота', self)
         self.blank = Nadpis('', self)
         self.feed_z_n = Nadpis('Вертикальна подача', self)
         self.z_safe_n = Nadpis('Висота безпеки', self)
@@ -159,12 +159,12 @@ class TitleWindow(QMainWindow):
         self.unit5 = Nadpis('мм', self)
         self.unit6 = Nadpis('мм', self)
 
-        self.rozmir.setFixedSize(150, 30)
+        self.rozmir.setFixedSize(250, 30)
         self.blank.setFixedSize(150, 30)
 
         # Поля ввода для параметров для создания управляющей программы
-        self.Vertic_size_input = L_Edit(self)
         self.Horiz_size_input = L_Edit(self)
+        self.Vertic_size_input = L_Edit(self)
         self.feed_z_input = L_Edit(self)
         self.z_safe_input = L_Edit(self)
         self.depth_Z_input = L_Edit(self)
@@ -175,15 +175,15 @@ class TitleWindow(QMainWindow):
         self.setLayout(cnc_params)
         cnc_params.setSpacing(10)
 
-        cnc_params.addWidget(self.rozmir, 1, 1, 1, 2)
+        cnc_params.addWidget(self.rozmir, 1, 0, 1, 2)
 
-        cnc_params.addWidget(self.Vertic_size, 2, 0)
-        cnc_params.addWidget(self.Vertic_size_input, 2, 1)
-        cnc_params.addWidget(self.unit1, 2, 2)
+        cnc_params.addWidget(self.Horiz_size, 2, 0)
+        cnc_params.addWidget(self.Horiz_size_input, 2, 1)
+        cnc_params.addWidget(self.unit2, 2, 2)
 
-        cnc_params.addWidget(self.Horiz_size, 3, 0)
-        cnc_params.addWidget(self.Horiz_size_input, 3, 1)
-        cnc_params.addWidget(self.unit2, 3, 2)
+        cnc_params.addWidget(self.Vertic_size, 3, 0)
+        cnc_params.addWidget(self.Vertic_size_input, 3, 1)
+        cnc_params.addWidget(self.unit1, 3, 2)
 
         cnc_params.addWidget(self.blank, 4, 0)
 
