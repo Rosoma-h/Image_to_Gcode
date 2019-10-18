@@ -41,14 +41,15 @@ def pixelisation_image(image, scale):
                     R = pix[i + w_p, j + h_p][0]
                     G = pix[i + w_p, j + h_p][1]
                     B = pix[i + w_p, j + h_p][2]
-                    S_gray_color = R + G + B
-            S_gray_color = int(S_gray_color / 3)
+                    S_depth = R + G + B
+            # Реверс кольору: темніше - глибше, світліше - мілче.
+            S_depth = 1 - round(S_depth / 765, 3)  # 765 = 3 * 255
 
             # Додавання координат і глибини до списку
-            koords.append(f.pos_glub(h_p, w_p, size_pixel, S_gray_color))
+            koords.append(f.pos_glub(h_p, w_p, size_pixel, S_depth))
 
             # Імітація "пікселізації" зображення
-            edited_image = f.ris_pixel(h_p, w_p, size_pixel, S_gray_color,
+            edited_image = f.ris_pixel(h_p, w_p, size_pixel, S_depth,
                                        edited_image, first_lap)
             if first_lap:
                 first_lap = False

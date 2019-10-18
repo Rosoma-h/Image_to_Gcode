@@ -100,7 +100,7 @@ def prosmotr_kartinki():
 
 
 def calculate_path_gcode():
-    # Генерация файла с Gcode
+    """ Генерация файла с Gcode."""
     global koords
     global Gcode
 
