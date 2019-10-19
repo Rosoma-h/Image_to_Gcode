@@ -64,8 +64,8 @@ M30'''
     return GcodeHead, GcodeEnd
 
 
-def calculate_gcode(Width_size, Height_size, koords, feed_z, z_safe,
-                    depth_Z, filtr_z):
+def calculate_gcode(Width_size, Height_size, feed_z, z_safe,
+                    depth_Z, filtr_z, koords):
     """Функція створює управляючу програму для станка
         на основі списку координат"""
     # if V_size and H_size:
@@ -74,20 +74,20 @@ def calculate_gcode(Width_size, Height_size, koords, feed_z, z_safe,
     # else:
     #     print("Vidsutnya zagotovka")
     head_gcode, end_gcode = head_end()
-    body_gcode = ""
+    body_gcode = ''
     for tochka in koords:
         # 0 = білий колір, мінімальна глибина;
         # 1 = чорний колір, максимальна глибина
         tochka_Z = round(- depth_Z * tochka[2], 2)
         # Додавання координати з глибиною більшою за filtr_z
         if abs(tochka_Z) >= filtr_z:
-            body_gcode += ("G0" + "X" + str(tochka[0]) +
-                           "Y" + str(tochka[1]) +
-                           "Z" + str(z_safe) + "\n"
+            body_gcode += ('G0' + 'X' + str(tochka[0]) +
+                           'Y' + str(tochka[1]) +
+                           'Z' + str(z_safe) + '\n'
                            )
-            body_gcode += ("G1" + "Z" + str(tochka_Z) + "F" +
-                           str(feed_z) + "\n" +
-                           "G0" + "Z" + str(z_safe) + "\n"
+            body_gcode += ('G1' + 'Z' + str(tochka_Z) + 'F' +
+                           str(feed_z) + '\n' +
+                           'G0' + 'Z' + str(z_safe) + '\n'
                            )
 
     Gcode = head_gcode + body_gcode + end_gcode
@@ -104,15 +104,50 @@ def convert_pil_image_to_QtPixmap(image):
     return image_pixmap
 
 
-def check(par_def, par_inp):
-    try:
-        if par_inp.text():
-            return par_inp.text()
-        else:
-            par_inp.setText(str(par_def))
+def check_input_values(ui, def_set, Kartinka):
+    """Перевірка наявності параметрів в полях вводу, а при їх наявності -
+    конвертація строкового формату в числовий."""
+
+    # Зчитування налаштувань по замовчуванню
+    default_parameters = [def_set.W_size,
+                          def_set.H_size,
+                          def_set.feed_z,
+                          def_set.z_safe,
+                          def_set.depth_Z,
+                          def_set.filtr_z
+                          ]
+
+    input_fields = [ui.Width_size_input,
+                    ui.Height_size_input,
+                    ui.feed_z_input,
+                    ui.z_safe_input,
+                    ui.depth_Z_input,
+                    ui.filtr_z_input
+                    ]
+
+    W_size = ui.Width_size_input.text()
+    H_size = ui.Height_size_input.text()
+
+    # Якщо картинка завантажена і розміри області обробки не задано -
+    # задати область відповідно розмірам зображення
+    if (
+        Kartinka and
+        (not(W_size) or W_size == '0') and
+        (not(H_size) or H_size == '0')
+    ):
+
+        ui.Width_size_input.setText(str(Kartinka.size[0]))
+        ui.Height_size_input.setText(str(Kartinka.size[1]))
+
+    def check(par_def, par_inp):
+        try:
+            if par_inp.text():
+                return par_inp.text()
+            else:
+                par_inp.setText(str(par_def))
+                return par_def
+        except:
             return par_def
-    except:
-        return par_def
 
     def convert_to_digit(d):
 
@@ -126,5 +161,8 @@ def check(par_def, par_inp):
                     pass
         else:
             return d
+
+    params = map(check, default_parameters, input_fields)
+    work_parameters = [convert_to_digit(x) for x in params]
 
     return work_parameters

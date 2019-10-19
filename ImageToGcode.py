@@ -59,7 +59,7 @@ def pixelisation_image(image, scale):
 
 def save_g_to_file(name_file_G, Gcode):
     # Запис програми у файл
-    f_gcode = open(name_file_G, "w")
+    f_gcode = open(name_file_G, 'w')
     f_gcode.write(Gcode)
     f_gcode.close()
 

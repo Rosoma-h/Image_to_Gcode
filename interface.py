@@ -55,7 +55,7 @@ class Butt(QtWidgets.QPushButton):
 
         # Установки шрифта на кнопки
         font_button = QtGui.QFont()
-        font_button.setFamily("Consolas")
+        font_button.setFamily('Consolas')
         font_button.setPointSize(18)
         font_button.setBold(True)
         font_button.setItalic(True)
@@ -73,7 +73,7 @@ class Nadpis(QtWidgets.QLabel):
         super().__init__(*args, **kwargs)
         # Установки шрифта на написах
         font_info = QtGui.QFont()
-        font_info.setFamily("NewsGoth BT")
+        font_info.setFamily('NewsGoth BT')
         font_info.setPointSize(14)
 
         self.setFont(font_info)
@@ -89,8 +89,13 @@ class TitleWindow(QMainWindow):
     def initUI(self):
 
         self.statusBar()
+        font_status = QtGui.QFont()
+        font_status.setFamily('Consolas')
+        font_status.setPointSize(18)
+        self.statusBar().setFont(font_status)
+
         self.setGeometry(150, 150, 1600, 700)
-        self.setWindowTitle("ImageToGcode")
+        self.setWindowTitle('ImageToGcode')
         self.setMinimumSize(QtCore.QSize(1600, 700))
         self.setMaximumSize(QtCore.QSize(1920, 1080))
 
@@ -99,8 +104,8 @@ class TitleWindow(QMainWindow):
         self.zagruzka.setGeometry(QtCore.QRect(30, 30, 150, 50))
 
         # Кнопка просмотра редактированного изображения
-        self.prosmotr = Butt('Перегляд', self)
-        self.prosmotr.setGeometry(QtCore.QRect(520, 65, 150, 50))
+        self.prosmotr = Butt('Пікселізація', self)
+        self.prosmotr.setGeometry(QtCore.QRect(520, 65, 200, 50))
 
         # Кнопка рассчета программы
         self.calculate_path = Butt('Розрахувати траєкторію', self)
@@ -111,14 +116,14 @@ class TitleWindow(QMainWindow):
         self.save_doc.setGeometry(QtCore.QRect(1150, 620, 250, 50))
 
         # Информация про размер изображения
-        self.info_picture = Nadpis("Розмір зображення: ", self)
+        self.info_picture = Nadpis('Розмір зображення: ', self)
         self.info_picture.setGeometry(QtCore.QRect(190, 30, 550, 30))
         self.info_picture.setFrameStyle(1)
 
         # Информация о параметрах редактирования изображения
-        self.scale_show = Nadpis("Кратність: ", self)
+        self.scale_show = Nadpis('Кратність: ', self)
         self.scale_show.setGeometry(QtCore.QRect(210, 60, 190, 30))
-        self.size_pixel = Nadpis("Розмір пікселя: ", self)
+        self.size_pixel = Nadpis('Розмір пікселя: ', self)
         self.size_pixel.setGeometry(QtCore.QRect(210, 90, 190, 30))
 
         # Вывод размера пикселя
@@ -150,6 +155,7 @@ class TitleWindow(QMainWindow):
         self.z_safe_n = Nadpis('Висота безпеки', self)
         self.depth_Z_n = Nadpis('Максимальна глибина', self)
         self.filtr_z_n = Nadpis('Мінімальний поріг глибини', self)
+
 
         # Надписи единиц измерения
         self.unit1 = Nadpis('мм', self)
@@ -222,15 +228,15 @@ class TitleWindow(QMainWindow):
 
         self.show()
 
-    def show_open_Dialog(self, loc="\Home"):
+    def show_open_Dialog(self, loc='\Home'):
 
         fname = QFileDialog.getOpenFileName(self, 'Open file', loc,
-                                "Image Files (*.png *.jpg *.bmp)")[0]
+                                'Image Files (*.png *.jpg *.bmp)')[0]
         return fname
 
-    def show_save_Dialog(self, loc="\Home"):
+    def show_save_Dialog(self, loc='\Home'):
         fname = QFileDialog.getSaveFileName(self, 'Save Gcode', loc,
-            "G-Ccode (mm)(*.tap);;All files(*.*)")[0]
+            'G-Ccode (mm)(*.tap);;All files(*.*)')[0]
         return fname
 
 

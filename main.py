@@ -1,16 +1,16 @@
 import sys
 import copy
 from os import getcwd
-from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
+from PyQt5 import QtCore
 from PyQt5.QtGui import QPixmap
 from PIL import ImageQt
 
 from settings import Settings
 from interface import TitleWindow
 from ImageToGcode import zagr_img, pixelisation_image, save_g_to_file
-from functions import calculate_gcode, convert_pil_image_to_QtPixmap
-    # convert_to_digit
+from functions import (calculate_gcode, convert_pil_image_to_QtPixmap,
+                       check_input_values)
 
 
 def_set = Settings()
@@ -30,10 +30,12 @@ global opening_directory
 global saving_directory
 Kartinka = None
 koords = None
-Gcode = "# Epty file"
-opening_directory = ""
-saving_directory = ""
+Gcode = '# Epty file'
+opening_directory = ''
+saving_directory = ''
 
+mess = 'Завантажте зображення.'
+ui.statusBar().showMessage(mess)
 
 def zagruzka_kartinki():
 
@@ -49,9 +51,15 @@ def zagruzka_kartinki():
     try:
         Kartinka = zagr_img(file_name)
         # Фіксація положення останнього відкритого файлу
-        opening_directory = file_name[:file_name.rfind("/") + 1]
+        opening_directory = file_name[:file_name.rfind('/') + 1]
+        mess = ('Зображення завантажене. ' +
+                'Напишіть величину кратності та "пікселізуйте" зображення.'
+                )
+        ui.statusBar().showMessage(mess)
     except:
         print('Не удалось открыть файл!')
+        mess = 'Не вдалося відкрити файл!'
+        ui.statusBar().showMessage(mess)
 
     if Kartinka:
 
@@ -60,9 +68,9 @@ def zagruzka_kartinki():
 
         width = Kartinka.size[0]  # Определяем ширину.
         height = Kartinka.size[1]  # Определяем висоту.
-        shablon = "Розмір зображення: "
+        shablon = 'Розмір зображення: '
         ui.info_picture.setText(shablon + str(width) +
-                                " на " + str(height) + " пікселів.")
+                                ' на ' + str(height) + ' пікселів.')
 
 
 def prosmotr_kartinki():
@@ -79,11 +87,9 @@ def prosmotr_kartinki():
         if text and text != '0':
 
             scale = int(float(ui.scale_input.text()))
-
             edited_img, size_pixel, koords = pixelisation_image(local_img,
                                                                 scale)
             ui.size_pixel_out.setText(str(size_pixel))
-
             edited_pixmap = convert_pil_image_to_QtPixmap(edited_img)
             ui.edited_image.setPixmap(edited_pixmap)
 
@@ -94,34 +100,30 @@ def prosmotr_kartinki():
 
 
 def calculate_path_gcode():
-    """ Генерация файла с Gcode."""
+    """Генерація файлу з Gcode."""
     global koords
     global Gcode
 
     # Очистка даних
-    Gcode = ""
-    # Задание настроек по умолчанию
-    W_size = def_set.W_size
-    H_size = def_set.H_size
-    feed_z = def_set.feed_z
-    z_safe = def_set.z_safe
-    depth_Z = def_set.depth_Z
-    filtr_z = def_set.filtr_z
+    Gcode = ''
 
-    default_parameters = [W_size, H_size, koords, feed_z,
-                          z_safe, depth_Z, filtr_z]
-
-    work_parameters = check_input_values(default_parameters)
-    print("Гынырацыя Гы кода")
+    work_parameters = check_input_values(ui, def_set, Kartinka)
+    work_parameters.append(koords)
+    # print('Гынырацыя Гы кода')
+    ui.statusBar().showMessage('Генерація G-коду....')
     try:
         Gcode = calculate_gcode(*work_parameters)
-        print("Код згынырырован")
+        ui.statusBar().showMessage('G-код згенерований успішно!')
+        print('Код згынырырован')
     except:
+        mess = ('Не вдалося згенерувати G-код. ' +
+                'Перевірте чи завантажене зображення "пікселізоване"')
+        ui.statusBar().showMessage(mess)
         print('Не удалось рассчитать траеторию')
 
 
 def save_g_code():
-
+    """Збереження G коду у файл."""
     global Gcode
     global saving_directory
     if saving_directory:
@@ -134,66 +136,10 @@ def save_g_code():
     try:
         save_g_to_file(file_name, Gcode)
         # Фіксація положення останнього збереженого файлу
-        saving_directory = file_name[:file_name.rfind("/") + 1]
+        saving_directory = file_name[:file_name.rfind('/') + 1]
 
     except:
         print('Не удалось сохранить файл!')
-
-
-def check_input_values(default_parameters):
-    """ Проверка наличия парраметров в полях ввода, при наличии
-        конвертация строкового формата в числовой."""
-    global Kartinka
-    global koords
-
-    input_fields = (ui.Width_size_input,
-                    ui.Height_size_input,
-                    koords,
-                    ui.feed_z_input,
-                    ui.z_safe_input,
-                    ui.depth_Z_input,
-                    ui.filtr_z_input
-                    )
-
-    W_size = ui.Width_size_input.text()
-    H_size = ui.Height_size_input.text()
-
-    if (
-        Kartinka
-            and (not(W_size) or W_size == "0")
-            and (not(H_size) or H_size == "0")
-        ):
-
-        ui.Width_size_input.setText(str(Kartinka.size[0]))
-        ui.Height_size_input.setText(str(Kartinka.size[1]))
-
-    def check(par_def, par_inp):
-        try:
-            if par_inp.text():
-                return par_inp.text()
-            else:
-                par_inp.setText(str(par_def))
-                return par_def
-        except:
-            return par_def
-
-    def convert_to_digit(d):
-
-        if isinstance(d, str):
-            try:
-                return int(d)
-            except:
-                try:
-                    return float(d)
-                except:
-                    pass
-        else:
-            return d
-
-    params = map(check, default_parameters, input_fields)
-    work_parameters = [convert_to_digit(x) for x in params]
-
-    return work_parameters
 
 
 # Events
