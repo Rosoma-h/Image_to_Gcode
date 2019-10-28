@@ -37,6 +37,7 @@ saving_directory = ''
 mess = 'Завантажте зображення.'
 ui.statusBar().showMessage(mess)
 
+
 def zagruzka_kartinki():
 
     global Kartinka
@@ -84,19 +85,21 @@ def prosmotr_kartinki():
 
     if local_img:
 
-        if text and text != '0':
+        if not(text and text != '0'):
 
-            scale = int(float(ui.scale_input.text()))
-            edited_img, size_pixel, koords = pixelisation_image(local_img,
-                                                                scale)
-            ui.size_pixel_out.setText(str(size_pixel))
-            edited_pixmap = convert_pil_image_to_QtPixmap(edited_img)
-            ui.edited_image.setPixmap(edited_pixmap)
-
-        else:
             size_start = str(int(min(local_img.size[0],
                                      local_img.size[1]) / 10))
             ui.scale_input.setText(size_start)
+
+        scale = int(float(ui.scale_input.text()))
+        edited_img, size_pixel, koords = pixelisation_image(local_img,
+                                                            scale)
+        ui.size_pixel_out.setText(str(size_pixel))
+        edited_pixmap = convert_pil_image_to_QtPixmap(edited_img)
+        ui.edited_image.setPixmap(edited_pixmap)
+
+        mess = ('Зображення "пікселізоване".')
+        ui.statusBar().showMessage(mess)
 
 
 def calculate_path_gcode():

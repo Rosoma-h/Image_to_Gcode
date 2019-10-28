@@ -100,7 +100,7 @@ class TitleWindow(QMainWindow):
         self.setMaximumSize(QtCore.QSize(1920, 1080))
 
         # Кнопка загрузки изображения
-        self.zagruzka = Butt('Загрузка', self)
+        self.zagruzka = Butt('Завантаження', self)
         self.zagruzka.setGeometry(QtCore.QRect(30, 30, 150, 50))
 
         # Кнопка просмотра редактированного изображения

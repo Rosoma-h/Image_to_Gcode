@@ -12,7 +12,6 @@ class Settings():
         self.feed_z = 1000
         self.depth_Z = 5
 
-
         # В програму вносяться координати величина яких >= filtr_z
         self.filtr_z = 0
 
