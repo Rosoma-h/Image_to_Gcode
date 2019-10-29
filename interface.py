@@ -260,7 +260,7 @@ class TitleWindow(QMainWindow):
         cnc_params.addWidget(self.save_doc, 12, 0)
 
         # Розміри сітки елементів
-        cnc_params.setGeometry(QtCore.QRect(1110, 80, 590, 550))
+        cnc_params.setGeometry(QtCore.QRect(1110, 80, 590, 520))
 
         # Диалоговое окно вибора файла.
         self.openFile = QAction(QIcon('open.png'),

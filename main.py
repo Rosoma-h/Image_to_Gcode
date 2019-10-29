@@ -114,6 +114,7 @@ def calculate_path_gcode():
 
     work_parameters = check_input_values(ui, def_set, Kartinka)
     work_parameters.append(koords)
+    work_parameters.append(Kartinka.size)
     # print('Гынырацыя Гы кода')
     ui.statusBar().showMessage('Генерація G-коду....')
     try:

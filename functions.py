@@ -65,24 +65,23 @@ M30'''
 
 
 def calculate_gcode(Width_size, Height_size, feed_z, z_safe,
-                    depth_Z, filtr_z, koords):
+                    depth_Z, filtr_z, koords, pict_size):
     """Функція створює управляючу програму для станка
         на основі списку координат"""
-    # if V_size and H_size:
-
-    #     print("Rozmir zagotovki zadano")
-    # else:
-    #     print("Vidsutnya zagotovka")
+    scale_gcode, rotate_angle = resize_rectangle((Width_size, Height_size),
+                                                 pict_size)
     head_gcode, end_gcode = head_end()
     body_gcode = ''
     for tochka in koords:
-        # 0 = білий колір, мінімальна глибина;
-        # 1 = чорний колір, максимальна глибина
+
+        tochka_X = round(tochka[0] * scale_gcode, 2)
+        tochka_Y = round(tochka[1] * scale_gcode, 2)
+
         tochka_Z = round(- depth_Z * tochka[2], 2)
         # Додавання координати з глибиною більшою за filtr_z
         if abs(tochka_Z) >= filtr_z:
-            body_gcode += ('G0' + 'X' + str(tochka[0]) +
-                           'Y' + str(tochka[1]) +
+            body_gcode += ('G0' + 'X' + str(tochka_X) +
+                           'Y' + str(tochka_Y) +
                            'Z' + str(z_safe) + '\n'
                            )
             body_gcode += ('G1' + 'Z' + str(tochka_Z) + 'F' +
@@ -180,21 +179,22 @@ def path_info_text(len_Z_down_feed='0', len_rapid_feed='0'):
 
 def resize_rectangle(size_user_input_rect=(1, 1), size__loaded_image=(1, 1)):
     """Функція яка визначає пропорції для визначення координат."""
-    print('-' * 15)
     scale_out, rotate_angle = 0, 0
     for k, s1 in enumerate(size__loaded_image):
         for n, s2 in enumerate(size_user_input_rect):
-
-            scale = round(s2 / s1, 3)
+            scale = s2 / s1
             line = scale * size__loaded_image[k - 1]
             if line <= size_user_input_rect[n - 1]:
-                print('намана!1')
                 if scale_out < scale:
                     scale_out = scale
                     if k != n:
                         rotate_angle = 1
 
-            print(scale, k, line)
-    print('-' * 15)
+    return round(scale_out, 3), rotate_angle
 
-    return scale_out, rotate_angle
+
+def path_lenght():
+    """Функція для обчислення довжини робочої подачі
+         і холостого ходу при виконанні програми на станку."""
+    pass
+    return None
