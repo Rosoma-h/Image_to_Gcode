@@ -3,11 +3,10 @@
 
 import sys
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import (QMainWindow, QGridLayout,
+from PyQt5.QtWidgets import (QMainWindow, QGridLayout, QHBoxLayout,
                              QAction, QFileDialog, QApplication)
-# from PyQt5.QtCore import QRegExp
-# QWidget,  QTextEdit,  QLabel,  QSizePolicy)
 from PyQt5.QtGui import QIcon, QDoubleValidator, QIntValidator
+from functions import path_info_text
 
 
 class L_Edit(QtWidgets.QLineEdit):
@@ -101,34 +100,43 @@ class TitleWindow(QMainWindow):
 
         # Кнопка загрузки изображения
         self.zagruzka = Butt('Завантаження', self)
-        self.zagruzka.setGeometry(QtCore.QRect(30, 30, 150, 50))
+        self.zagruzka.setFixedSize(200, 30)
+        # self.zagruzka.setGeometry(QtCore.QRect(30, 30, 150, 50))
 
         # Кнопка просмотра редактированного изображения
-        self.prosmotr = Butt('Пікселізація', self)
-        self.prosmotr.setGeometry(QtCore.QRect(520, 65, 200, 50))
+        self.pixelization = Butt('Пікселізація', self)
+        self.pixelization.setFixedSize(200, 30)
+        # self.pixelization.setGeometry(QtCore.QRect(520, 65, 200, 50))
 
         # Кнопка рассчета программы
         self.calculate_path = Butt('Розрахувати траєкторію', self)
         self.calculate_path.setFixedSize(300, 30)
+        self.calculate_path.setDisabled(True)
 
         # Кнопка сохранения Gcode
         self.save_doc = Butt('Зберегти файл', self)
-        self.save_doc.setGeometry(QtCore.QRect(1150, 620, 250, 50))
+        self.save_doc.setFixedSize(250, 50)
+        # self.save_doc.setGeometry(QtCore.QRect(1150, 620, 250, 50))
+        self.save_doc.setDisabled(True)
 
         # Информация про размер изображения
         self.info_picture = Nadpis('Розмір зображення: ', self)
-        self.info_picture.setGeometry(QtCore.QRect(190, 30, 550, 30))
+        self.info_picture.setFixedSize(550, 30)
+        # self.info_picture.setGeometry(QtCore.QRect(190, 30, 550, 30))
         self.info_picture.setFrameStyle(1)
 
         # Информация о параметрах редактирования изображения
-        self.scale_show = Nadpis('Кратність: ', self)
-        self.scale_show.setGeometry(QtCore.QRect(210, 60, 190, 30))
+        self.scale = Nadpis('Кратність: ', self)
+        self.scale.setFixedSize(200, 30)
+        # self.scale.setGeometry(QtCore.QRect(210, 60, 190, 30))
         self.size_pixel = Nadpis('Розмір пікселя: ', self)
-        self.size_pixel.setGeometry(QtCore.QRect(210, 90, 190, 30))
+        self.size_pixel.setFixedSize(200, 30)
+        # self.size_pixel.setGeometry(QtCore.QRect(210, 90, 190, 30))
 
         # Вывод размера пикселя
         self.size_pixel_out = Nadpis(self)
-        self.size_pixel_out.setGeometry(QtCore.QRect(400, 90, 110, 30))
+        self.size_pixel_out.setFixedSize(110, 30)
+        # self.size_pixel_out.setGeometry(QtCore.QRect(400, 90, 110, 30))
         self.size_pixel_out.setFrameStyle(1)
         self.size_pixel_out.setAlignment(QtCore.Qt.AlignRight |
                                          QtCore.Qt.AlignBaseline)
@@ -141,6 +149,15 @@ class TitleWindow(QMainWindow):
         self.edited_image = Nadpis(self)
         self.edited_image.setGeometry(QtCore.QRect(580, 150, 500, 500))
         self.edited_image.setFrameStyle(1)
+
+        # Інформаація про готову траєкторію
+
+        self.path_info = Nadpis(path_info_text(), self)
+        self.path_info.setFixedSize(450, 60)
+        # self.path_info.setAlignment(QtCore.Qt.AlignVCenter |
+                                         # QtCore.Qt.AlignBaseline)
+        # self.path_info.setGeometry(QtCore.QRect(190, 30, 550, 30))
+        self.path_info.setFrameStyle(1)
 
         # Поля ввода для параметров редактирования изображения
         self.scale_input = L_Edit_int(self)
@@ -175,6 +192,33 @@ class TitleWindow(QMainWindow):
         self.z_safe_input = L_Edit(self)
         self.depth_Z_input = L_Edit(self)
         self.filtr_z_input = L_Edit(self)
+
+        # Сетка из елементов інтерфейсу
+        zagruz_pix = QGridLayout()
+        self.setLayout(zagruz_pix)
+        zagruz_pix.setSpacing(10)
+
+        zagruz_pix.addWidget(self.zagruzka, 0, 0)
+        zagruz_pix.addWidget(self.pixelization, 1, 0)
+
+        zagruz_pix.addWidget(self.info_picture, 0, 1, 1, 3)
+        zagruz_pix.addWidget(self.scale, 1, 1)
+        zagruz_pix.addWidget(self.size_pixel, 2, 1)
+        zagruz_pix.addWidget(self.scale_input, 1, 2)
+        zagruz_pix.addWidget(self.size_pixel_out, 2, 2)
+
+        # Розміри сітки елементів
+        zagruz_pix.setGeometry(QtCore.QRect(30, 30, 1200, 90))
+
+        # Група елеметів для показу зображень
+        visualisation_elements = QHBoxLayout()
+        self.setLayout(visualisation_elements)
+        visualisation_elements.setSpacing(30)
+
+        visualisation_elements.addWidget(self.origin_image)
+        visualisation_elements.addWidget(self.edited_image)
+
+        visualisation_elements.setGeometry(QtCore.QRect(50, 160, 1050, 500))
 
         # Сетка из елементов для параметров станка
         cnc_params = QGridLayout()
@@ -211,7 +255,12 @@ class TitleWindow(QMainWindow):
 
         cnc_params.addWidget(self.calculate_path, 9, 0)
 
-        cnc_params.setGeometry(QtCore.QRect(1110, 80, 590, 300))
+        cnc_params.addWidget(self.path_info, 10, 0, 1, 3)
+
+        cnc_params.addWidget(self.save_doc, 12, 0)
+
+        # Розміри сітки елементів
+        cnc_params.setGeometry(QtCore.QRect(1110, 80, 590, 550))
 
         # Диалоговое окно вибора файла.
         self.openFile = QAction(QIcon('open.png'),

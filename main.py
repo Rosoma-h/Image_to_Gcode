@@ -74,13 +74,12 @@ def zagruzka_kartinki():
                                 ' на ' + str(height) + ' пікселів.')
 
 
-def prosmotr_kartinki():
+def pikselizacia_kartinki():
 
     global Kartinka
     global koords
 
     local_img = copy.deepcopy(Kartinka)
-
     text = ui.scale_input.text()
 
     if local_img:
@@ -101,6 +100,9 @@ def prosmotr_kartinki():
         mess = ('Зображення "пікселізоване".')
         ui.statusBar().showMessage(mess)
 
+        # активація кнопки розрахунку траєкторії
+        ui.calculate_path.setDisabled(False)
+
 
 def calculate_path_gcode():
     """Генерація файлу з Gcode."""
@@ -117,12 +119,14 @@ def calculate_path_gcode():
     try:
         Gcode = calculate_gcode(*work_parameters)
         ui.statusBar().showMessage('G-код згенерований успішно!')
-        print('Код згынырырован')
+        # print('Код згынырырован')
     except:
         mess = ('Не вдалося згенерувати G-код. ' +
                 'Перевірте чи завантажене зображення "пікселізоване"')
         ui.statusBar().showMessage(mess)
-        print('Не удалось рассчитать траеторию')
+
+    # активація кнопки збереження траєкторії
+    ui.save_doc.setDisabled(False)
 
 
 def save_g_code():
@@ -140,6 +144,8 @@ def save_g_code():
         save_g_to_file(file_name, Gcode)
         # Фіксація положення останнього збереженого файлу
         saving_directory = file_name[:file_name.rfind('/') + 1]
+        mess = 'Файл ' + file_name + ' збережено.'
+        ui.statusBar().showMessage(mess)
 
     except:
         print('Не удалось сохранить файл!')
@@ -150,7 +156,7 @@ def save_g_code():
 
 ui.openFile.triggered.connect(zagruzka_kartinki)
 ui.zagruzka.clicked.connect(zagruzka_kartinki)
-ui.prosmotr.clicked.connect(prosmotr_kartinki)
+ui.pixelization.clicked.connect(pikselizacia_kartinki)
 ui.calculate_path.clicked.connect(calculate_path_gcode)
 ui.save_doc.clicked.connect(save_g_code)
 

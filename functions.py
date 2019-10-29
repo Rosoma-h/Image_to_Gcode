@@ -166,3 +166,35 @@ def check_input_values(ui, def_set, Kartinka):
     work_parameters = [convert_to_digit(x) for x in params]
 
     return work_parameters
+
+
+def path_info_text(len_Z_down_feed='0', len_rapid_feed='0'):
+    """Функція, яка форматує вивід інформаціі про траєкторію."""
+    text_info_path = ('Довжина подачі врізання: ' +
+                      len_Z_down_feed + ' мм\n' +
+                      'Довжина швидких переміщень: ' +
+                      len_rapid_feed + ' мм')
+
+    return text_info_path
+
+
+def resize_rectangle(size_user_input_rect=(1, 1), size__loaded_image=(1, 1)):
+    """Функція яка визначає пропорції для визначення координат."""
+    print('-' * 15)
+    scale_out, rotate_angle = 0, 0
+    for k, s1 in enumerate(size__loaded_image):
+        for n, s2 in enumerate(size_user_input_rect):
+
+            scale = round(s2 / s1, 3)
+            line = scale * size__loaded_image[k - 1]
+            if line <= size_user_input_rect[n - 1]:
+                print('намана!1')
+                if scale_out < scale:
+                    scale_out = scale
+                    if k != n:
+                        rotate_angle = 1
+
+            print(scale, k, line)
+    print('-' * 15)
+
+    return scale_out, rotate_angle
