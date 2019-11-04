@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
 import sys
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import (QMainWindow, QGridLayout, QHBoxLayout,
@@ -87,6 +86,9 @@ class TitleWindow(QMainWindow):
 
     def initUI(self):
 
+
+        self.setWindowIcon(QtGui.QIcon('Iconka.bmp'))
+
         self.statusBar()
         font_status = QtGui.QFont()
         font_status.setFamily('Consolas')
@@ -158,6 +160,7 @@ class TitleWindow(QMainWindow):
                                          # QtCore.Qt.AlignBaseline)
         # self.path_info.setGeometry(QtCore.QRect(190, 30, 550, 30))
         self.path_info.setFrameStyle(1)
+        self.path_info.setVisible(False)
 
         # Поля ввода для параметров редактирования изображения
         self.scale_input = L_Edit_int(self)

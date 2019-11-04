@@ -72,14 +72,27 @@ def calculate_gcode(Width_size, Height_size, feed_z, z_safe,
                                                  pict_size)
     head_gcode, end_gcode = head_end()
     body_gcode = ''
+    first_move = True
+
     for tochka in koords:
 
         tochka_X = round(tochka[0] * scale_gcode, 2)
         tochka_Y = round(tochka[1] * scale_gcode, 2)
-
         tochka_Z = round(- depth_Z * tochka[2], 2)
+
         # Додавання координати з глибиною більшою за filtr_z
+
         if abs(tochka_Z) >= filtr_z:
+
+
+
+            if first_move:
+                body_gcode += ('G0' + 'X' + str(tochka_X) +
+                               'Y' + str(tochka_Y) +
+                               'Z' + str(50) + '\n'
+                               )
+                first_move = False
+
             body_gcode += ('G0' + 'X' + str(tochka_X) +
                            'Y' + str(tochka_Y) +
                            'Z' + str(z_safe) + '\n'
@@ -193,8 +206,17 @@ def resize_rectangle(size_user_input_rect=(1, 1), size__loaded_image=(1, 1)):
     return round(scale_out, 3), rotate_angle
 
 
-def path_lenght():
-    """Функція для обчислення довжини робочої подачі
-         і холостого ходу при виконанні програми на станку."""
-    pass
-    return None
+# def path_lenght(Gcode):
+#     """Функція для обчислення довжини робочої подачі
+#          і холостого ходу при виконанні програми на станку."""
+
+#     current_move_point, prev_move_point = (0, 0, 0), (0, 0, 0)
+#     rapid_feed, cut_feed = 0
+
+#     for stroka in Gcode:
+
+#         if stroka[0:2] == 'G0' or stroka[0:2] == 'G1':
+#             pass
+
+
+#     return rapid_feed, cut_feed
