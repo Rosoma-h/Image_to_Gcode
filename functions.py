@@ -206,17 +206,58 @@ def resize_rectangle(size_user_input_rect=(1, 1), size__loaded_image=(1, 1)):
     return round(scale_out, 3), rotate_angle
 
 
-# def path_lenght(Gcode):
-#     """Функція для обчислення довжини робочої подачі
-#          і холостого ходу при виконанні програми на станку."""
+def convert_str_to_digit(digits):
+    """Функція конвертує строку в число, в ціле або з плаваючою точкою."""
+    if len(digits):
+        if '.' in digits:
+            digits = float(digits)
+        else:
+            digits = int(digits)
 
-#     current_move_point, prev_move_point = (0, 0, 0), (0, 0, 0)
-#     rapid_feed, cut_feed = 0
-
-#     for stroka in Gcode:
-
-#         if stroka[0:2] == 'G0' or stroka[0:2] == 'G1':
-#             pass
+    return digits
 
 
-#     return rapid_feed, cut_feed
+def path_lenght(Gcode):
+    """Функція для обчислення довжини робочої подачі
+         і холостого ходу при виконанні програми на станку."""
+
+    # current_move_point, prev_move_point = (0, 0, 0), (0, 0, 0)
+    cut_feed, rapid_feed = 0, 0
+
+    # x_koord, y_koord, z_koord = 0, 0, 0
+    flag = ''
+    Gcode = Gcode.split('\n')
+
+    for stroka in Gcode:
+        stroka += '*'  # Add symbol end of string
+        digits = ''
+        flag = ''
+        kommand = stroka[0:2]
+        params = stroka[2:]
+
+        if kommand == 'G0' or kommand == 'G1':
+
+            for char in params:
+
+                if char.isalpha():
+
+                    digits = convert_str_to_digit(digits)
+
+                    print(flag, digits, sep='', end='')
+                    print(' ', end='')
+                    flag = char
+                    digits = ''
+
+                elif char.isdigit() or char == '.':
+                    digits += char
+
+                if char == '*':
+                    digits = convert_str_to_digit(digits)
+
+                    print(flag, digits, sep='', end='')
+                    print(' ', end='')
+        print()
+
+    cut_feed, rapid_feed
+
+    return cut_feed, rapid_feed
