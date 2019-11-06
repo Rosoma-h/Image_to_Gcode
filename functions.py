@@ -295,4 +295,4 @@ def path_lenght(Gcode):
         # print(' Теперішня: ', current_move_point)
         # print(key, distance, 5 * '-', feed_info['G1'], feed_info['G0'])
 
-    return round(feed_info['G1'], 4), round(feed_info['G0'], 4)
+    return round(feed_info['G1'], 2), round(feed_info['G0'], 2)
