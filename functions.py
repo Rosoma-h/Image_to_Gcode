@@ -84,8 +84,6 @@ def calculate_gcode(Width_size, Height_size, feed_z, z_safe,
 
         if abs(tochka_Z) >= filtr_z:
 
-
-
             if first_move:
                 body_gcode += ('G0' + 'X' + str(tochka_X) +
                                'Y' + str(tochka_Y) +
@@ -241,17 +239,14 @@ def path_lenght(Gcode):
     """Функція для обчислення довжини робочої подачі
          і холостого ходу при виконанні програми на станку."""
 
-    # current_move_point, prev_move_point = (0, 0, 0), (0, 0, 0)
     feed_info = {'G0': 0, 'G1': 0, 'E': 0}
-    # cut_feed, rapid_feed = feed_info['G1'], feed_info['G0']
     current_move_point = {'X': None, 'Y': None, 'Z': None}
     prev_move_point = {'X': None, 'Y': None, 'Z': None}
-    # x_koord, y_koord, z_koord = 0, 0, 0
     flag = ''
     Gcode = Gcode.split('\n')
 
     for n, stroka in enumerate(Gcode, 1):
-        # print('\n', n, ': ')
+
         stroka += '*'  # Add symbol end of string
         digits = ''
         flag = ''
@@ -269,8 +264,6 @@ def path_lenght(Gcode):
                     if flag:
                         current_move_point[flag] = digits
 
-                    # print(flag, digits, sep='', end='')
-                    # print(' ', end='')
                     flag = char
                     digits = ''
 
@@ -283,16 +276,8 @@ def path_lenght(Gcode):
                     if flag:
                         current_move_point[flag] = digits
 
-                    # print(flag, digits, sep='', end='')
-
-        # print('\n', n, ': ')
         key, distance = change_of_position(current_move_point, prev_move_point)
-
         feed_info[key] += distance
-
-        # print('\n', 'Попередня: ', prev_move_point)
         prev_move_point.update(current_move_point)
-        # print(' Теперішня: ', current_move_point)
-        # print(key, distance, 5 * '-', feed_info['G1'], feed_info['G0'])
 
     return round(feed_info['G1'], 2), round(feed_info['G0'], 2)
