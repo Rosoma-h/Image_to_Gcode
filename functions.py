@@ -217,18 +217,37 @@ def convert_str_to_digit(digits):
     return digits
 
 
+def change_of_position(current_move_point, prev_move_point):
+    """Фунція обчислює величину переміщення відносно попередньої
+        точки(строки) і повертає відстань і тип переміщення
+        (rapid moves or feed moves)"""
+    change_pos = {'X': 0, 'Y': 0, 'Z': 0}
+    quad_sum = 0
+
+    for key in change_pos.keys():
+        if current_move_point[key] != prev_move_point[key]:
+            change_pos[key] = current_move_point[key] - prev_move_point[key]
+            quad_sum += change_pos[key] ** 2
+
+    quad_sum = quad_sum ** 0.5
+
+    return current_move_point['kommand'], round(quad_sum, 4)
+
+
 def path_lenght(Gcode):
     """Функція для обчислення довжини робочої подачі
          і холостого ходу при виконанні програми на станку."""
 
     # current_move_point, prev_move_point = (0, 0, 0), (0, 0, 0)
     cut_feed, rapid_feed = 0, 0
-
+    current_move_point = {'X': None, 'Y': None, 'Z': None}
+    prev_move_point = {'X': None, 'Y': None, 'Z': None}
     # x_koord, y_koord, z_koord = 0, 0, 0
     flag = ''
     Gcode = Gcode.split('\n')
 
-    for stroka in Gcode:
+    for n, stroka in enumerate(Gcode, 1):
+        print('\n', n, ': ')
         stroka += '*'  # Add symbol end of string
         digits = ''
         flag = ''
@@ -237,26 +256,34 @@ def path_lenght(Gcode):
 
         if kommand == 'G0' or kommand == 'G1':
 
+            current_move_point['kommand'] = kommand
             for char in params:
 
                 if char.isalpha():
 
                     digits = convert_str_to_digit(digits)
-
+                    if flag:
+                        current_move_point[flag] = digits
                     print(flag, digits, sep='', end='')
                     print(' ', end='')
                     flag = char
                     digits = ''
 
-                elif char.isdigit() or char == '.':
+                elif char.isdigit() or char == '.' or char == '-':
                     digits += char
 
                 if char == '*':
+
                     digits = convert_str_to_digit(digits)
+                    if flag:
+                        current_move_point[flag] = digits
 
                     print(flag, digits, sep='', end='')
-                    print(' ', end='')
-        print()
+
+        # print('\n', n, ': ')
+        print('\n', 'Попередня: ', prev_move_point)
+        prev_move_point.update(current_move_point)
+        print(' Теперішня: ', current_move_point)
 
     cut_feed, rapid_feed
 
