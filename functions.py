@@ -182,10 +182,10 @@ def check_input_values(ui, def_set, Kartinka):
 
 def path_info_text(len_Z_down_feed='0', len_rapid_feed='0'):
     """Функція, яка форматує вивід інформаціі про траєкторію."""
-    text_info_path = ('Довжина подачі врізання: ' +
-                      len_Z_down_feed + ' мм\n' +
+    text_info_path = ('Довжина подачі різання: ' +
+                      str(len_Z_down_feed) + ' мм\n' +
                       'Довжина швидких переміщень: ' +
-                      len_rapid_feed + ' мм')
+                      str(len_rapid_feed) + ' мм')
 
     return text_info_path
 

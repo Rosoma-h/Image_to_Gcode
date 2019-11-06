@@ -160,7 +160,7 @@ class TitleWindow(QMainWindow):
                                          # QtCore.Qt.AlignBaseline)
         # self.path_info.setGeometry(QtCore.QRect(190, 30, 550, 30))
         self.path_info.setFrameStyle(1)
-        self.path_info.setVisible(False)
+        self.path_info.setVisible(True)
 
         # Поля ввода для параметров редактирования изображения
         self.scale_input = L_Edit_int(self)

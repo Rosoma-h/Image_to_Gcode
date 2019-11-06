@@ -10,7 +10,7 @@ from settings import Settings
 from interface import TitleWindow
 from ImageToGcode import zagr_img, pixelisation_image, save_g_to_file
 from functions import (calculate_gcode, convert_pil_image_to_QtPixmap,
-                       check_input_values)
+                       check_input_values, path_info_text, path_lenght)
 
 
 def_set = Settings()
@@ -119,6 +119,7 @@ def calculate_path_gcode():
     ui.statusBar().showMessage('Генерація G-коду....')
     try:
         Gcode = calculate_gcode(*work_parameters)
+        ui.path_info.setText(path_info_text(*path_lenght(Gcode)))
         ui.statusBar().showMessage('G-код згенерований успішно!')
         # print('Код згынырырован')
     except:
