@@ -225,13 +225,16 @@ def change_of_position(current_move_point, prev_move_point):
     quad_sum = 0
 
     for key in change_pos.keys():
+        if current_move_point[key] is None or prev_move_point[key] is None:
+            return current_move_point.get('kommand', 'E'), 0
+
         if current_move_point[key] != prev_move_point[key]:
             change_pos[key] = current_move_point[key] - prev_move_point[key]
             quad_sum += change_pos[key] ** 2
 
     quad_sum = quad_sum ** 0.5
 
-    return current_move_point['kommand'], round(quad_sum, 4)
+    return current_move_point.get('kommand', 'E'), round(quad_sum, 4)
 
 
 def path_lenght(Gcode):
@@ -239,7 +242,8 @@ def path_lenght(Gcode):
          і холостого ходу при виконанні програми на станку."""
 
     # current_move_point, prev_move_point = (0, 0, 0), (0, 0, 0)
-    cut_feed, rapid_feed = 0, 0
+    feed_info = {'G0': 0, 'G1': 0, 'E': 0}
+    # cut_feed, rapid_feed = feed_info['G1'], feed_info['G0']
     current_move_point = {'X': None, 'Y': None, 'Z': None}
     prev_move_point = {'X': None, 'Y': None, 'Z': None}
     # x_koord, y_koord, z_koord = 0, 0, 0
@@ -247,7 +251,7 @@ def path_lenght(Gcode):
     Gcode = Gcode.split('\n')
 
     for n, stroka in enumerate(Gcode, 1):
-        print('\n', n, ': ')
+        # print('\n', n, ': ')
         stroka += '*'  # Add symbol end of string
         digits = ''
         flag = ''
@@ -264,8 +268,9 @@ def path_lenght(Gcode):
                     digits = convert_str_to_digit(digits)
                     if flag:
                         current_move_point[flag] = digits
-                    print(flag, digits, sep='', end='')
-                    print(' ', end='')
+
+                    # print(flag, digits, sep='', end='')
+                    # print(' ', end='')
                     flag = char
                     digits = ''
 
@@ -278,13 +283,16 @@ def path_lenght(Gcode):
                     if flag:
                         current_move_point[flag] = digits
 
-                    print(flag, digits, sep='', end='')
+                    # print(flag, digits, sep='', end='')
 
         # print('\n', n, ': ')
-        print('\n', 'Попередня: ', prev_move_point)
+        key, distance = change_of_position(current_move_point, prev_move_point)
+
+        feed_info[key] += distance
+
+        # print('\n', 'Попередня: ', prev_move_point)
         prev_move_point.update(current_move_point)
-        print(' Теперішня: ', current_move_point)
+        # print(' Теперішня: ', current_move_point)
+        # print(key, distance, 5 * '-', feed_info['G1'], feed_info['G0'])
 
-    cut_feed, rapid_feed
-
-    return cut_feed, rapid_feed
+    return round(feed_info['G1'], 4), round(feed_info['G0'], 4)
