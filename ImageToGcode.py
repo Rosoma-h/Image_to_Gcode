@@ -17,7 +17,8 @@ def pixelisation_image(image, scale):
     pix = image.load()
     # Перший прохід по циклу
     first_lap = True
-    koords = []
+    koords = []  # Двомірний масив для збереження координат
+    koord_line = []  # Один із елементів двомірного масиву
     # обчислення розму "пікселя" пікселізації
     size_pixel = int(ceil(min(width, height) / scale))
     range_size = range(size_pixel)
@@ -29,6 +30,7 @@ def pixelisation_image(image, scale):
     # поправки для розміщення рамки в середині картинки
     de_w = int((width - box_w) / 2)
     de_h = int((height - box_h) / 2)
+
     for h in range(range_h):
         for w in range(range_w):
             # координати позиції для обчислення середнього кольору пікселя
@@ -46,13 +48,16 @@ def pixelisation_image(image, scale):
             S_depth = 1 - round(S_depth / 765, 3)  # 765 = 3 * 255
 
             # Додавання координат і глибини до списку
-            koords.append(f.pos_glub(w_p, h_p, size_pixel, S_depth))
+            koord_line.append(f.pos_glub(w_p, h_p, size_pixel, S_depth))
 
             # Показ "пікселізації" зображення
             edited_image = f.ris_pixel(w_p, h_p, size_pixel, S_depth,
                                        edited_image, first_lap)
             if first_lap:
                 first_lap = False
+
+        koords.append(koord_line.copy())
+        koord_line.clear()
 
     return edited_image, size_pixel, koords
 

@@ -74,31 +74,45 @@ def calculate_gcode(Width_size, Height_size, feed_z, z_safe,
     body_gcode = ''
     first_move = True
 
-    for tochka in koords:
+    forward_direction = True
+    list_koord = range(0, len(koords[0]))
+    rev_list_koord = range(len(koords[0]) - 1, -1, -1)
 
-        tochka_X = round(tochka[0] * scale_gcode, 2)
-        tochka_Y = round(tochka[1] * scale_gcode, 2)
-        tochka_Z = round(- depth_Z * tochka[2], 2)
+    for i in range(len(koords)):
+        # Фрезеровка "змійкою", для зменшення довжини холостих переміщень
+        if forward_direction:
+            iteration = list_koord
+            forward_direction = False
+        else:
+            iteration = rev_list_koord
+            forward_direction = True
 
-        # Додавання координати з глибиною більшою за filtr_z
+        for t in iteration:
 
-        if abs(tochka_Z) >= filtr_z:
+            tochka = koords[i][t]
+            tochka_X = round(tochka[0] * scale_gcode, 2)
+            tochka_Y = round(tochka[1] * scale_gcode, 2)
+            tochka_Z = round(- depth_Z * tochka[2], 2)
 
-            if first_move:
+            # Додавання координати з глибиною більшою за filtr_z
+
+            if abs(tochka_Z) >= filtr_z:
+
+                if first_move:
+                    body_gcode += ('G0' + 'X' + str(tochka_X) +
+                                   'Y' + str(tochka_Y) +
+                                   'Z' + str(50) + '\n'
+                                   )
+                    first_move = False
+
                 body_gcode += ('G0' + 'X' + str(tochka_X) +
                                'Y' + str(tochka_Y) +
-                               'Z' + str(50) + '\n'
+                               'Z' + str(z_safe) + '\n'
                                )
-                first_move = False
-
-            body_gcode += ('G0' + 'X' + str(tochka_X) +
-                           'Y' + str(tochka_Y) +
-                           'Z' + str(z_safe) + '\n'
-                           )
-            body_gcode += ('G1' + 'Z' + str(tochka_Z) + 'F' +
-                           str(feed_z) + '\n' +
-                           'G0' + 'Z' + str(z_safe) + '\n'
-                           )
+                body_gcode += ('G1' + 'Z' + str(tochka_Z) + 'F' +
+                               str(feed_z) + '\n' +
+                               'G0' + 'Z' + str(z_safe) + '\n'
+                               )
 
     Gcode = head_gcode + body_gcode + end_gcode
 

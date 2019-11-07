@@ -2,9 +2,9 @@ import sys
 import copy
 from os import getcwd
 from PyQt5.QtWidgets import QApplication
-from PyQt5 import QtCore
-from PyQt5.QtGui import QPixmap
-from PIL import ImageQt
+# from PyQt5 import QtCore
+# from PyQt5.QtGui import QPixmap
+# from PIL import ImageQt
 
 from settings import Settings
 from interface import TitleWindow
