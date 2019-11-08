@@ -211,24 +211,68 @@ def check_input_values(ui, def_set, Kartinka):
     return work_parameters
 
 
-def path_info_text(feed_z=0, rapid_feed=0, path_lenght=(0, 0)):
+def path_info_text(feed_z=0, rapid_feed=0, path_len=(0, 0)):
     """Функція, яка форматує вивід інформаціі про траєкторію."""
-    machining_time = work_time()
-    len_Z_down_feed = path_lenght[0]
-    len_rapid_feed = path_lenght[1]
+    machining_time = formatted_time(
+        work_time(feed_z, rapid_feed, path_len))
+    len_Z_down_feed = path_len[0]
+    len_rapid_feed = path_len[1]
     text_info_path = ('Довжина подачі різання: ' +
                       str(len_Z_down_feed) + ' мм\n' +
                       'Довжина швидких переміщень: ' +
                       str(len_rapid_feed) + ' мм\n' +
                       'Час машинної обробки: ' +
-                      machining_time)
+                      machining_time + ' (год:хв:с)')
 # 00:04:50
     return text_info_path
 
 
-def work_time(feed_z=0, rapid_feed=0, path_lenght=(0, 0)):
+def work_time(feed_z, rapid_feed, path_len):
     """Функція, яка вираховує час виконання управляючої програми."""
-    return '00:00:00'
+    len_Z_down_feed = path_len[0]
+    len_rapid_feed = path_len[1]
+    if feed_z != 0 and rapid_feed != 0:
+        time_in_sec = int((len_Z_down_feed / feed_z +
+                           len_rapid_feed / rapid_feed) * 60)
+        return time_in_sec
+    else:
+        return 0
+
+
+def formatted_time(time_in_sec):
+    """Форматування відображення часу."""
+    time = ''
+    hours = time_in_sec // 3600
+    minuts = (time_in_sec % 3600) // 60
+    seconds = (time_in_sec % 3600) % 60
+    if hours:
+        if hours > 9:
+            time += str(hours) + ':'
+        else:
+            time += '0' + str(hours) + ':'
+    else:
+        time += '00:'
+
+    if minuts:
+        if minuts > 9:
+            time += str(minuts) + ':'
+        else:
+            time += '0' + str(minuts) + ':'
+    else:
+        time += '00:'
+
+    if seconds:
+        if seconds > 9:
+            time += str(seconds)
+        else:
+            time += '0' + str(seconds)
+    else:
+        time += '00'
+
+    print(time)
+    return time
+
+
 
 
 def resize_rectangle(size_user_input_rect=(1, 1), size__loaded_image=(1, 1)):
