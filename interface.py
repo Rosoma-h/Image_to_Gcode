@@ -86,7 +86,6 @@ class TitleWindow(QMainWindow):
 
     def initUI(self):
 
-
         self.setWindowIcon(QtGui.QIcon('Iconka.bmp'))
 
         self.statusBar()
@@ -152,10 +151,10 @@ class TitleWindow(QMainWindow):
         self.edited_image.setGeometry(QtCore.QRect(580, 150, 500, 500))
         self.edited_image.setFrameStyle(1)
 
-        # Інформаація про готову траєкторію
+        # Інформація про готову траєкторію
 
         self.path_info = Nadpis(path_info_text(), self)
-        self.path_info.setFixedSize(450, 60)
+        self.path_info.setFixedSize(450, 90)
         # self.path_info.setAlignment(QtCore.Qt.AlignVCenter |
                                          # QtCore.Qt.AlignBaseline)
         # self.path_info.setGeometry(QtCore.QRect(190, 30, 550, 30))
@@ -175,28 +174,30 @@ class TitleWindow(QMainWindow):
         self.z_safe_n = Nadpis('Висота безпеки', self)
         self.depth_Z_n = Nadpis('Максимальна глибина', self)
         self.filtr_z_n = Nadpis('Мінімальний поріг глибини', self)
+        self.rapid_feed = Nadpis('Швидкість холостого ходу', self)
 
-
-        # Надписи единиц измерения
+        # Надписи одиниць вимірювання
         self.unit1 = Nadpis('мм', self)
         self.unit2 = Nadpis('мм', self)
         self.unit3 = Nadpis('мм/хв', self)
         self.unit4 = Nadpis('мм', self)
         self.unit5 = Nadpis('мм', self)
         self.unit6 = Nadpis('мм', self)
+        self.unit7 = Nadpis('мм/хв', self)
 
         self.rozmir.setFixedSize(250, 30)
         self.blank.setFixedSize(150, 30)
 
-        # Поля ввода для параметров для создания управляющей программы
+        # Поля вводу для параметрів для створення управляючої програми
         self.Width_size_input = L_Edit(self)
         self.Height_size_input = L_Edit(self)
         self.feed_z_input = L_Edit(self)
         self.z_safe_input = L_Edit(self)
         self.depth_Z_input = L_Edit(self)
         self.filtr_z_input = L_Edit(self)
+        self.rapid_feed_input = L_Edit(self)
 
-        # Сетка из елементов інтерфейсу
+        # Сітка із елементів інтерфейсу
         zagruz_pix = QGridLayout()
         self.setLayout(zagruz_pix)
         zagruz_pix.setSpacing(10)
@@ -256,14 +257,18 @@ class TitleWindow(QMainWindow):
         cnc_params.addWidget(self.filtr_z_input, 8, 1,)
         cnc_params.addWidget(self.unit6, 8, 2)
 
-        cnc_params.addWidget(self.calculate_path, 9, 0)
+        cnc_params.addWidget(self.rapid_feed, 9, 0)
+        cnc_params.addWidget(self.rapid_feed_input, 9, 1)
+        cnc_params.addWidget(self.unit7, 9, 2)
 
-        cnc_params.addWidget(self.path_info, 10, 0, 1, 3)
+        cnc_params.addWidget(self.calculate_path, 10, 0)
 
-        cnc_params.addWidget(self.save_doc, 12, 0)
+        cnc_params.addWidget(self.path_info, 11, 0, 1, 3)
+
+        cnc_params.addWidget(self.save_doc, 13, 0)
 
         # Розміри сітки елементів
-        cnc_params.setGeometry(QtCore.QRect(1110, 80, 590, 520))
+        cnc_params.setGeometry(QtCore.QRect(1110, 80, 520, 580))
 
         # Диалоговое окно вибора файла.
         self.openFile = QAction(QIcon('open.png'),

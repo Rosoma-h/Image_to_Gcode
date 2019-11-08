@@ -113,15 +113,16 @@ def calculate_path_gcode():
     Gcode = ''
 
     work_parameters = check_input_values(ui, def_set, Kartinka)
-    work_parameters.append(koords)
-    work_parameters.append(Kartinka.size)
-    # print('Гынырацыя Гы кода')
     ui.statusBar().showMessage('Генерація G-коду....')
+
     try:
-        Gcode = calculate_gcode(*work_parameters)
-        ui.path_info.setText(path_info_text(*path_lenght(Gcode)))
+
+        Gcode = calculate_gcode(work_parameters, koords, Kartinka.size)
+        ui.path_info.setText(path_info_text(work_parameters['feed_z'],
+                                            work_parameters['rapid_feed'],
+                                            path_lenght(Gcode)))
         ui.statusBar().showMessage('G-код згенерований успішно!')
-        # print('Код згынырырован')
+
     except:
         mess = ('Не вдалося згенерувати G-код. ' +
                 'Перевірте чи завантажене зображення "пікселізоване"')
@@ -150,7 +151,8 @@ def save_g_code():
         ui.statusBar().showMessage(mess)
 
     except:
-        print('Не удалось сохранить файл!')
+        mess = 'Файл не збережено.'
+        ui.statusBar().showMessage(mess)
 
 
 # Events

@@ -64,10 +64,18 @@ M30'''
     return GcodeHead, GcodeEnd
 
 
-def calculate_gcode(Width_size, Height_size, feed_z, z_safe,
-                    depth_Z, filtr_z, koords, pict_size):
+def calculate_gcode(work_parameters, koords, pict_size):
     """Функція створює управляючу програму для станка
         на основі списку координат"""
+
+    # отримання параметрів із списку (потрібно буде придумати кращий варіант)
+    Width_size = work_parameters['W_size']
+    Height_size = work_parameters['H_size']
+    feed_z = work_parameters['feed_z']
+    z_safe = work_parameters['z_safe']
+    depth_Z = work_parameters['depth_Z']
+    filtr_z = work_parameters['filtr_z']
+
     scale_gcode, rotate_angle = resize_rectangle((Width_size, Height_size),
                                                  pict_size)
     head_gcode, end_gcode = head_end()
@@ -133,21 +141,23 @@ def check_input_values(ui, def_set, Kartinka):
     конвертація строкового формату в числовий."""
 
     # Зчитування налаштувань по замовчуванню
-    default_parameters = [def_set.W_size,
-                          def_set.H_size,
-                          def_set.feed_z,
-                          def_set.z_safe,
-                          def_set.depth_Z,
-                          def_set.filtr_z
-                          ]
+    default_parameters = {'W_size': def_set.W_size,
+                          'H_size': def_set.H_size,
+                          'feed_z': def_set.feed_z,
+                          'z_safe': def_set.z_safe,
+                          'depth_Z': def_set.depth_Z,
+                          'filtr_z': def_set.filtr_z,
+                          'rapid_feed': def_set.rapid_feed
+                          }
 
-    input_fields = [ui.Width_size_input,
-                    ui.Height_size_input,
-                    ui.feed_z_input,
-                    ui.z_safe_input,
-                    ui.depth_Z_input,
-                    ui.filtr_z_input
-                    ]
+    input_fields = {'W_size': ui.Width_size_input,
+                    'H_size': ui.Height_size_input,
+                    'feed_z': ui.feed_z_input,
+                    'z_safe': ui.z_safe_input,
+                    'depth_Z': ui.depth_Z_input,
+                    'filtr_z': ui.filtr_z_input,
+                    'rapid_feed': ui.rapid_feed_input
+                    }
 
     W_size = ui.Width_size_input.text()
     H_size = ui.Height_size_input.text()
@@ -164,6 +174,10 @@ def check_input_values(ui, def_set, Kartinka):
         ui.Height_size_input.setText(str(Kartinka.size[1]))
 
     def check(par_def, par_inp):
+        """Функція перевіки полів вводу на наявність введених параметрів,
+        при їх відсутності вносяться параметри по замовчуванню
+        із файлу settings.py."""
+
         try:
             if par_inp.text():
                 return par_inp.text()
@@ -174,6 +188,7 @@ def check_input_values(ui, def_set, Kartinka):
             return par_def
 
     def convert_to_digit(d):
+        """Функція перетворення строки в числове значення."""
 
         if isinstance(d, str):
             try:
@@ -186,20 +201,34 @@ def check_input_values(ui, def_set, Kartinka):
         else:
             return d
 
-    params = map(check, default_parameters, input_fields)
-    work_parameters = [convert_to_digit(x) for x in params]
+    work_parameters = {}
+
+    for key, input_value in input_fields.items():
+
+        work_parameters[key] = convert_to_digit(
+            check(default_parameters[key], input_value))
 
     return work_parameters
 
 
-def path_info_text(len_Z_down_feed='0', len_rapid_feed='0'):
+def path_info_text(feed_z=0, rapid_feed=0, path_lenght=(0, 0)):
     """Функція, яка форматує вивід інформаціі про траєкторію."""
+    machining_time = work_time()
+    len_Z_down_feed = path_lenght[0]
+    len_rapid_feed = path_lenght[1]
     text_info_path = ('Довжина подачі різання: ' +
                       str(len_Z_down_feed) + ' мм\n' +
                       'Довжина швидких переміщень: ' +
-                      str(len_rapid_feed) + ' мм')
-
+                      str(len_rapid_feed) + ' мм\n' +
+                      'Час машинної обробки: ' +
+                      machining_time)
+# 00:04:50
     return text_info_path
+
+
+def work_time(feed_z=0, rapid_feed=0, path_lenght=(0, 0)):
+    """Функція, яка вираховує час виконання управляючої програми."""
+    return '00:00:00'
 
 
 def resize_rectangle(size_user_input_rect=(1, 1), size__loaded_image=(1, 1)):

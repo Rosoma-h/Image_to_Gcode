@@ -9,8 +9,9 @@ class Settings():
         self.W_size = 0
         self.H_size = 0
         self.z_safe = 1
-        self.feed_z = 1000
+        self.feed_z = 1000  # мм мм/хв
         self.depth_Z = 5
+        self.rapid_feed = 6000  # мм мм/хв
 
         # В програму вносяться координати величина яких >= filtr_z
         self.filtr_z = 0
