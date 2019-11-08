@@ -269,7 +269,6 @@ def formatted_time(time_in_sec):
     else:
         time += '00'
 
-    print(time)
     return time
 
 
